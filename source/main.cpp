@@ -12,14 +12,13 @@
 #include "math/Vector2f.h"
 #include "Rect.h"
 #include "Timer.h"
+#include "Sprite.h"
 
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define WINDOW_TITLE "Hello World"
 #define MS_PER_UPDATE 16					//Our target ms per update, 16 is about 60fps
-
-float xPos, yPos;
 
 
 bool Initialize(SDL_Window* &Window, SDL_Renderer* &Renderer)
@@ -69,20 +68,17 @@ int main(int argc, char* args[])
 		debugSDL();
 	}
 
-	std::string grassResourcePath = getResourcePath("grass.png");
-	debug("%s",grassResourcePath.c_str() );
-	SDL_Texture* grassTexture = loadTexture(grassResourcePath, Renderer);
-
-	std::string playerResourcePath = getResourcePath("alienYellow.png");
-	SDL_Texture* playerTexture = loadTexture(playerResourcePath, Renderer);
+	std::string resourcePath;
+	resourcePath = getResourcePath("grass.png");
+	Sprite grass(Renderer, resourcePath);
 
 
-	SDL_Rect rect;
-	SDL_QueryTexture(grassTexture, 0, 0, &rect.w, &rect.h);
+	resourcePath = getResourcePath("alienYellow.png");
+	Sprite PlayerYellowAlien = Sprite(Renderer, resourcePath);
 
-	SDL_Rect pRect;
-	SDL_QueryTexture(playerTexture, 0, 0, &pRect.w, &pRect.h);
 
+	float xPos = 0;
+	float yPos = 0;
 
 	Timer timer = {0};
 	timer.MSPerUpdate = MS_PER_UPDATE;
@@ -142,6 +138,8 @@ int main(int argc, char* args[])
 			if(keystate[SDL_SCANCODE_DOWN]) {
 				yPos += amount;
 			}
+
+
 			timer.accumulator -= MS_PER_UPDATE;
 		}
 
@@ -150,24 +148,16 @@ int main(int argc, char* args[])
 
 
 		//Draw Code//
-		rect.y = 0;
 		for(int i = 0; i < 10; i++) {
-			rect.x = 0;
 			for(int j = 0; j < 10; j++) {
-				SDL_RenderCopy(Renderer, grassTexture, 0, &rect);
-				rect.x += rect.w;
+				grass.draw(Renderer, i*(grass.getWidth()), j*grass.getHeight());
 			}
-			rect.y += rect.h;
 		}
-
-
-		pRect.x = (int) xPos;
-		pRect.y = (int) yPos;
-		SDL_RenderCopy(Renderer, playerTexture, 0, &pRect);
+		PlayerYellowAlien.draw(Renderer, xPos, yPos);
 
 		char msCounter[200];
 		sprintf(msCounter, "%ums elapsed", timer.msElapsed);
-		drawText(msCounter, font, Renderer);
+		drawText(msCounter, font, Renderer, 10, 10);
 		///////////
 
 		SDL_RenderPresent(Renderer);

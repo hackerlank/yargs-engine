@@ -1,7 +1,3 @@
-#include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
-#include <SDL2_ttf/SDL_ttf.h>
-
 #include "Utility.h"
 #include "debug.h"
 
@@ -31,7 +27,8 @@ std::string getResourcePath(const std::string& relativePath)
 	return assetBasePath + relativePath;
 }
 
-void drawText(char* message, TTF_Font *font, SDL_Renderer* Renderer)
+void drawText(char* message, TTF_Font *font, SDL_Renderer* Renderer,
+							int x, int y)
 {
 	SDL_Color color = { 255, 255, 255, 255 };
 	SDL_Rect fRect;
@@ -45,9 +42,10 @@ void drawText(char* message, TTF_Font *font, SDL_Renderer* Renderer)
 	SDL_DestroyTexture(texture);
 }
 
-void drawText(const std::string &message,TTF_Font* font,SDL_Renderer* Renderer)
+void drawText(const std::string &message,TTF_Font* font,SDL_Renderer* Renderer,
+							int x, int y)
 {
-	drawText(message.c_str(), font, Renderer);
+	drawText(message.c_str(), font, Renderer, x, y);
 }
 
 

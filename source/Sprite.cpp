@@ -41,3 +41,13 @@ void Sprite::loadTexture(SDL_Renderer* renderer, std::string FileNamePath)
   SpriteRect.x = 0;
   SpriteRect.y = 0;
 }
+
+int Sprite::getWidth()
+{
+  return SpriteRect.w;
+}
+
+int Sprite::getHeight()
+{
+  return SpriteRect.h;
+}

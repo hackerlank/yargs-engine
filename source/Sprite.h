@@ -18,6 +18,8 @@ public:
   void draw(SDL_Renderer* renderer, int x, int y);
   void loadTexture(SDL_Renderer* renderer, std::string FileNamePath);
 
+  int getWidth();
+  int getHeight();
 };
 
 #endif
