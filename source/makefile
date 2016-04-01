@@ -1,7 +1,7 @@
 CC = clang++
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 
-CFLAGS = -Wall -c -DDEBUG
+CFLAGS = -Wall -c -DDEBUG -std=c++11
 LDFLAGS = $(SDL)
 EXECUTABLE = Game
 BUILDDIR = ../build
@@ -14,10 +14,16 @@ BUILDDIR = ../build
 all: $(EXECUTABLE)
 	@mv *.o $(EXECUTABLE) $(BUILDDIR)
 
-$(EXECUTABLE): main.o Utility.o Sprite.o Vector2f.o
+$(EXECUTABLE): main.o Utility.o Sprite.o Vector2f.o InputHandler.o Command.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
 main.o: main.cpp
+	$(CC) $(CFLAGS) $< -o $@
+
+InputHandler.o: InputHandler.cpp
+	$(CC) $(CFLAGS) $< -o $@
+
+Command.o: Command.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
 Utility.o: Utility.cpp

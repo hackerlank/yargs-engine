@@ -13,6 +13,7 @@
 #include "Rect.h"
 #include "Timer.h"
 #include "Sprite.h"
+#include "InputHandler.h"
 
 
 #define SCREEN_WIDTH 640
@@ -20,6 +21,8 @@
 #define WINDOW_TITLE "Hello World"
 #define MS_PER_UPDATE 16					//Our target ms per update, 16 is about 60fps
 
+float xPos = 0;
+float yPos = 0;
 
 bool Initialize(SDL_Window* &Window, SDL_Renderer* &Renderer)
 {
@@ -30,7 +33,7 @@ bool Initialize(SDL_Window* &Window, SDL_Renderer* &Renderer)
 	Window = SDL_CreateWindow(WINDOW_TITLE,
 														SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 														SCREEN_WIDTH, SCREEN_HEIGHT,
-														SDL_WINDOW_SHOWN);
+														SDL_WINDOW_SHOWN );
 	if(!Window){
 		debugSDL();
 		return false;
@@ -60,33 +63,23 @@ int main(int argc, char* args[])
 	SDL_Renderer* Renderer = 0;
 	Initialize(Window, Renderer);
 
-
-
-	std::string fontResourcePath = getResourcePath("fonts/consola.ttf");
-	TTF_Font *font = TTF_OpenFont(fontResourcePath.c_str(), 18);
-	if(!font) {
-		debugSDL();
-	}
-
 	std::string resourcePath;
+
+	resourcePath = getResourcePath("fonts/consola.ttf");
+	TTF_Font *font = loadFont(resourcePath, 18);
+
 	resourcePath = getResourcePath("grass.png");
 	Sprite grass(Renderer, resourcePath);
-
 
 	resourcePath = getResourcePath("alienYellow.png");
 	Sprite PlayerYellowAlien = Sprite(Renderer, resourcePath);
 
 
-	float xPos = 0;
-	float yPos = 0;
-
+	InputHandler inputHandler;
 	Timer timer = {0};
 	timer.MSPerUpdate = MS_PER_UPDATE;
 	updateTimer(&timer);
 	bool Running = true;
-
-	//TODO: Put this in some type of InputHandler
-	const Uint8* keystate = SDL_GetKeyboardState(0);
 
 	while(Running) {
 		updateTimer(&timer);
@@ -118,34 +111,38 @@ int main(int argc, char* args[])
 			}
 		}
 
-		SDL_RenderClear(Renderer);
-
+		inputHandler.HandleInput();
 
 		//FixedUpdate//
 		while(timer.accumulator >= timer.MSPerUpdate){
 //			debug("FixedUpdate()");
 			float amount = 200.0f * timer.dt;
 
-			if(keystate[SDL_SCANCODE_RIGHT]) {
+			if(inputHandler.isKeyPressed(KEY_RIGHT)) {
 				xPos += amount;
 			}
-			if(keystate[SDL_SCANCODE_LEFT]) {
+			if(inputHandler.isKeyPressed(KEY_LEFT)) {
 				xPos -= amount;
 			}
-			if(keystate[SDL_SCANCODE_UP]) {
+			if(inputHandler.isKeyPressed(KEY_UP)) {
 				yPos -= amount;
 			}
-			if(keystate[SDL_SCANCODE_DOWN]) {
+			if(inputHandler.isKeyPressed(KEY_DOWN)) {
 				yPos += amount;
 			}
-
+			if(inputHandler.isKeyPressed(KEY_F)) {
+				SDL_SetWindowFullscreen(Window, SDL_WINDOW_FULLSCREEN);
+			}
+			if(inputHandler.isKeyPressed(KEY_J)) {
+				SDL_SetWindowFullscreen(Window, 0);
+			}
 
 			timer.accumulator -= MS_PER_UPDATE;
 		}
 
 		////////////
 
-
+		SDL_RenderClear(Renderer);
 
 		//Draw Code//
 		for(int i = 0; i < 10; i++) {

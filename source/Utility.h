@@ -17,4 +17,6 @@ void drawText(const std::string &message,TTF_Font* font,SDL_Renderer* Renderer,
 
 SDL_Texture* loadTexture(std::string &FileNamePath, SDL_Renderer* Renderer);
 
+TTF_Font* loadFont(std::string fontResourcePath, int FontSize);
+
 #endif

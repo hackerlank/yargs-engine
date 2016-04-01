@@ -57,3 +57,12 @@ SDL_Texture* loadTexture(std::string &FileNamePath, SDL_Renderer* Renderer)
 	}
 	return Texture;
 }
+
+TTF_Font* loadFont(std::string fontResourcePath, int FontSize)
+{
+	TTF_Font* font = TTF_OpenFont(fontResourcePath.c_str(), 18);
+	if(!font) {
+		debugSDL();
+	}
+	return font;
+}

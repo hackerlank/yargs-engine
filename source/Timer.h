@@ -10,7 +10,7 @@ struct Timer {
   uint32_t CurrentTime;
   uint32_t msElapsed;
   uint32_t accumulator;
-  float dt;             //multiply times movement to get pixels per movement
+  float dt;             //multiply times movement to get pixels per second
   uint8_t MSPerUpdate;  //TODO: decide on whether this can be changed live
 };
 
