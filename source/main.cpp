@@ -69,7 +69,7 @@ int main(int argc, char* args[])
 	resourcePath = getResourcePath("grass.png");
 	Sprite grass(Renderer, resourcePath);
 
-	resourcePath = getResourcePath("alienYellow.png");
+	resourcePath = getResourcePath("blackline.png");
 	PlayerCharacter player1 = PlayerCharacter(Renderer, resourcePath);
 
 	resourcePath = getResourcePath("alienGreen.png");
@@ -82,6 +82,9 @@ int main(int argc, char* args[])
 	updateTimer(&timer);
 	FPS_Counter fps_counter = {&timer, 0, 0, 0, 10, true};
 	bool Running = true;
+
+	SDL_SetRenderDrawColor(Renderer, 100, 80, 200, 255);
+	SDL_Rect fillRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
 	while(Running) {
 		updateTimer(&timer);
@@ -120,22 +123,23 @@ int main(int argc, char* args[])
 			}
 
 			SDL_PumpEvents();	//update keyboard state
-			timer.accumulator -= MS_PER_UPDATE;
+			timer.accumulator -= timer.MSPerUpdate;
 		}
 		////////////
 
 
 		//Draw Code//
 		SDL_RenderClear(Renderer);
+		SDL_RenderFillRect(Renderer, &fillRect);
 
 		for(int i = 0; i <= SCREEN_WIDTH/grass.getWidth(); i++) {
 			for(int j = 0; j <= SCREEN_HEIGHT/grass.getHeight(); j++) {
-				grass.draw(Renderer, i*(grass.getWidth()), j*grass.getHeight());
+//				grass.draw(Renderer, i*(grass.getWidth()), j*grass.getHeight());
 			}
 		}
 
-		player1.draw(Renderer);
-		player2.draw(Renderer);
+		player1.draw(Renderer, timer.accumulator / (float) timer.MSPerUpdate);
+		player2.draw(Renderer, timer.accumulator / (float) timer.MSPerUpdate);
 
 		char msCounter[200];
 		sprintf(msCounter, "%ums elapsed", timer.msElapsed);
@@ -150,7 +154,7 @@ int main(int argc, char* args[])
 		//			current code might cause me some other issues down the line.
 		//			My guess is that vsync turns off when window not in focus.
 		if((timer.OldTime + 18 - SDL_GetTicks()) < 1000) {
-			SDL_Delay(timer.OldTime + 18 - SDL_GetTicks());
+//			SDL_Delay(timer.OldTime + 18 - SDL_GetTicks());
 		}
 	}
 

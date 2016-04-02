@@ -11,19 +11,20 @@ class PlayerCharacter
 {
 private:
   Sprite sprite;
-  Vector2f position;
+  Vector2f Position;
+  Vector2f Velocity;
 
 public:
   PlayerCharacter(SDL_Renderer* renderer, std::string FileNamePath);
-  void draw(SDL_Renderer* renderer);
+  void draw(SDL_Renderer* renderer, float interpolate);
   void update(float dt, InputHandler* inputHandler);
   void bindKeys(uint8_t keyLeft, uint8_t keyUp,
                 uint8_t keyRight, uint8_t keyDown);
 
-  uint8_t LeftKey;
-  uint8_t UpKey;
-  uint8_t RightKey;
-  uint8_t DownKey;
+  uint8_t moveLeftKey;
+  uint8_t moveUpKey;
+  uint8_t moveRightKey;
+  uint8_t moveDownKey;
 };
 
 

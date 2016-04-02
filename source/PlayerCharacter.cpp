@@ -1,45 +1,74 @@
 #include "PlayerCharacter.h"
+#include <math.h>
 #include "debug.h"
 
+//NOTE: For some reason, sprite was calling its deconsructor after exiting the
+//      PlayerCharacter constructor.
 PlayerCharacter::PlayerCharacter(SDL_Renderer* renderer,
                                  std::string FileNamePath)
                                  :sprite(renderer, FileNamePath)
 {
-  position = Vector2f(10,10);
-  UpKey = KEY_UP;
-  DownKey = KEY_DOWN;
-  LeftKey = KEY_LEFT;
-  RightKey = KEY_RIGHT;
+  Position = Vector2f(10,10);
+  Velocity = Vector2f(0, 0);
+  moveUpKey = KEY_UP;
+  moveDownKey = KEY_DOWN;
+  moveLeftKey = KEY_LEFT;
+  moveRightKey = KEY_RIGHT;
 }
 
-void PlayerCharacter::draw(SDL_Renderer* renderer)
+void PlayerCharacter::draw(SDL_Renderer* renderer, float extrapolate)
 {
-  sprite.draw(renderer, position.x, position.y);
+  /*
+  //NOTE: This uses interpolation
+  Vector2f temp(prevPosition.x + interpolate*Position.x,
+                prevPosition.y + interpolate*Position.y);
+  sprite.draw(renderer, temp.x, temp.y);
+  //NOTE: This uses nothing*/
+  //sprite.draw(renderer, roundf(Position.x), roundf(Position.y));
+  //NOTE: This uses extrapolation
+  sprite.draw(renderer, Position.x + extrapolate*Velocity.x,
+              Position.y + extrapolate*Velocity.y);
 }
 
 void PlayerCharacter::update(float dt, InputHandler* inputHandler)
 {
-  float amount = 200.0f;
+  float amount = 10.0f;
 
-  if(inputHandler->isKeyPressed(LeftKey)) {
-    position.x = position.x - amount*dt;
+  Vector2f Acceleration = Vector2f(0,0);
+  if(inputHandler->isKeyPressed(moveLeftKey)) {
+    Acceleration.x -= 1;
   }
-  if(inputHandler->isKeyPressed(RightKey)) {
-    position.x = position.x + amount*dt;
+  if(inputHandler->isKeyPressed(moveRightKey)) {
+    Acceleration.x += 1;
   }
-  if(inputHandler->isKeyPressed(DownKey)) {
-    position.y = position.y + amount*dt;
+  if(inputHandler->isKeyPressed(moveDownKey)) {
+    Acceleration.y += 1;
   }
-  if(inputHandler->isKeyPressed(UpKey)) {
-    position.y = position.y - amount*dt;
+  if(inputHandler->isKeyPressed(moveUpKey)) {
+    Acceleration.y -= 1;
   }
+
+  Acceleration.normalize();
+  Acceleration = Acceleration * (amount*dt);
+
+  if(Acceleration.getLength() == 0) {
+    if(fabs(Velocity.x) < 1.0f) {
+      Velocity.x = 0;
+    }
+    if(fabs(Velocity.y) < 1.0f) {
+      Velocity.y = 0;
+    }
+  }
+
+  Velocity = Velocity + Acceleration;
+  Position = Position + Velocity;
 }
 
 void PlayerCharacter::bindKeys(uint8_t keyLeft, uint8_t keyUp,
                                uint8_t keyRight, uint8_t keyDown)
 {
-  this->LeftKey = keyLeft;
-  this->UpKey = keyUp;
-  this->RightKey = keyRight;
-  this->DownKey = keyDown;
+  this->moveLeftKey = keyLeft;
+  this->moveUpKey = keyUp;
+  this->moveRightKey = keyRight;
+  this->moveDownKey = keyDown;
 }

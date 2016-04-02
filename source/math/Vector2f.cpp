@@ -1,6 +1,7 @@
 #include "Vector2f.h"
 #include <math.h>
 
+#include "../debug.h"
 
 Vector2f::Vector2f()
 {
@@ -25,11 +26,16 @@ Vector2f Vector2f::operator-(const Vector2f& other)
   float Y = y - other.y;
   return Vector2f(X, Y);
 }
-Vector2f Vector2f::operator*(const int scaleAmount)
+Vector2f Vector2f::operator*(const float scaleAmount)
 {
-  float X = x * scaleAmount;
-  float Y = y * scaleAmount;
+  float X = x*scaleAmount;
+  float Y = y*scaleAmount;
   return Vector2f(X, Y);
+}
+void Vector2f::operator=(const Vector2f& other)
+{
+  x = other.x;
+  y = other.y;
 }
 
 Vector2f Vector2f::getNormal()
@@ -49,7 +55,8 @@ void Vector2f::scale(float amount)
 void Vector2f::normalize()
 {
   float length = getLength();
-  this->x = this->x/length;
-  this->y = this->y/length;
-  return;
+  if(length > 0){
+    this->x = this->x/length;
+    this->y = this->y/length;
+  }
 }
