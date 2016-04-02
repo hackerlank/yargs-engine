@@ -6,6 +6,8 @@ LDFLAGS = $(SDL)
 EXECUTABLE = Game
 BUILDDIR = ../build
 
+SOURCES = main.o Utility.o Sprite.o Vector2f.o InputHandler.o Command.o \
+PlayerCharacter.o
 
 # $< is the name of the first prereq
 # $@ is the name of the target of the rule
@@ -14,10 +16,13 @@ BUILDDIR = ../build
 all: $(EXECUTABLE)
 	@mv *.o $(EXECUTABLE) $(BUILDDIR)
 
-$(EXECUTABLE): main.o Utility.o Sprite.o Vector2f.o InputHandler.o Command.o
+$(EXECUTABLE): $(SOURCES)
 	$(CC) $(LDFLAGS) $^ -o $@
 
 main.o: main.cpp
+	$(CC) $(CFLAGS) $< -o $@
+
+PlayerCharacter.o: PlayerCharacter.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
 InputHandler.o: InputHandler.cpp

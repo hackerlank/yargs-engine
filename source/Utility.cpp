@@ -24,6 +24,7 @@ std::string getResourcePath(const std::string& relativePath)
 		size_t pos = assetBasePath.rfind("build");
 		assetBasePath = assetBasePath.substr(0, pos) + "assets" + PATH_SEP;
 	}
+
 	return assetBasePath + relativePath;
 }
 

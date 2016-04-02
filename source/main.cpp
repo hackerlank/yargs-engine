@@ -14,15 +14,13 @@
 #include "Timer.h"
 #include "Sprite.h"
 #include "InputHandler.h"
+#include "PlayerCharacter.h"
 
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define WINDOW_TITLE "Hello World"
 #define MS_PER_UPDATE 16					//Our target ms per update, 16 is about 60fps
-
-float xPos = 0;
-float yPos = 0;
 
 bool Initialize(SDL_Window* &Window, SDL_Renderer* &Renderer)
 {
@@ -64,7 +62,6 @@ int main(int argc, char* args[])
 	Initialize(Window, Renderer);
 
 	std::string resourcePath;
-
 	resourcePath = getResourcePath("fonts/consola.ttf");
 	TTF_Font *font = loadFont(resourcePath, 18);
 
@@ -72,7 +69,7 @@ int main(int argc, char* args[])
 	Sprite grass(Renderer, resourcePath);
 
 	resourcePath = getResourcePath("alienYellow.png");
-	Sprite PlayerYellowAlien = Sprite(Renderer, resourcePath);
+	PlayerCharacter player = PlayerCharacter(Renderer, resourcePath);
 
 
 	InputHandler inputHandler;
@@ -87,49 +84,28 @@ int main(int argc, char* args[])
 
 		//Process Events//
 		SDL_Event Event;
+		//NOTE: SDL_PollEvent also calls SDL_PumpEvents which updates the keyboard
+		//			state that is used by inputHandler.
 		while(SDL_PollEvent(&Event)) {
 			switch(Event.type) {
 				case SDL_QUIT: {
 					Running = false;
 					debug("Event: SDL_QUIT");
 				}break;
-
 				case SDL_KEYDOWN: {
 					if(Event.key.keysym.sym == SDLK_ESCAPE) {
 						Running = false;
 					}
-					debug("Event: SDL_KEYDOWN, xpos:%f ypos:%f", xPos, yPos);
-				}break;
-
-				case SDL_MOUSEBUTTONDOWN: {
-					debug("Event: SDL_MOUSEBUTTONDOWN");
-				}break;
-
-				default: {
-					//debug("Event: default");
 				}break;
 			}
 		}
 
-		inputHandler.HandleInput();
 
 		//FixedUpdate//
 		while(timer.accumulator >= timer.MSPerUpdate){
 //			debug("FixedUpdate()");
-			float amount = 200.0f * timer.dt;
+			player.update(timer.dt, &inputHandler);
 
-			if(inputHandler.isKeyPressed(KEY_RIGHT)) {
-				xPos += amount;
-			}
-			if(inputHandler.isKeyPressed(KEY_LEFT)) {
-				xPos -= amount;
-			}
-			if(inputHandler.isKeyPressed(KEY_UP)) {
-				yPos -= amount;
-			}
-			if(inputHandler.isKeyPressed(KEY_DOWN)) {
-				yPos += amount;
-			}
 			if(inputHandler.isKeyPressed(KEY_F)) {
 				SDL_SetWindowFullscreen(Window, SDL_WINDOW_FULLSCREEN);
 			}
@@ -137,28 +113,29 @@ int main(int argc, char* args[])
 				SDL_SetWindowFullscreen(Window, 0);
 			}
 
+			SDL_PumpEvents();	//update keyboard state
 			timer.accumulator -= MS_PER_UPDATE;
 		}
-
 		////////////
 
-		SDL_RenderClear(Renderer);
 
 		//Draw Code//
+		SDL_RenderClear(Renderer);
+
 		for(int i = 0; i < 10; i++) {
 			for(int j = 0; j < 10; j++) {
 				grass.draw(Renderer, i*(grass.getWidth()), j*grass.getHeight());
 			}
 		}
-		PlayerYellowAlien.draw(Renderer, xPos, yPos);
+
+		player.draw(Renderer);
 
 		char msCounter[200];
 		sprintf(msCounter, "%ums elapsed", timer.msElapsed);
 		drawText(msCounter, font, Renderer, 10, 10);
-		///////////
 
 		SDL_RenderPresent(Renderer);
-
+		///////////
 
 		//TODO: This is a bit sloppy but it prevents the cpu from spiking
 		//			when the window is not in focused. Figure out why, this

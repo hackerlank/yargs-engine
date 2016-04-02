@@ -20,6 +20,8 @@ public:
 
   int getWidth();
   int getHeight();
+  int getX();
+  int getY();
 };
 
 #endif
