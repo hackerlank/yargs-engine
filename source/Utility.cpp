@@ -33,8 +33,8 @@ void drawText(char* message, TTF_Font *font, SDL_Renderer* Renderer,
 {
 	SDL_Color color = { 255, 255, 255, 255 };
 	SDL_Rect fRect;
-	fRect.x = 10;
-	fRect.y = 10;
+	fRect.x = x;
+	fRect.y = y;
 	SDL_Surface* surface = TTF_RenderText_Blended(font, message, color);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(Renderer, surface);
 	SDL_QueryTexture(texture, 0, 0, &fRect.w, &fRect.h);

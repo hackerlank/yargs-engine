@@ -13,12 +13,14 @@ class InputHandler
 public:
   InputHandler();
   ~InputHandler();
+  void updateInput();
   void ExecuteCommands();
   void bindCommandToKey(int Key, Command* command);
   bool isKeyPressed(int Key);
 
 private:
   Command* commands[83];
+  //Uint8 was_keypressed[83];
   const Uint8* keystate;
   //const Uint8* previous_keystate;
 };

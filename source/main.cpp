@@ -15,6 +15,7 @@
 #include "Sprite.h"
 #include "InputHandler.h"
 #include "PlayerCharacter.h"
+#include "FPS_Counter.h"
 
 
 #define SCREEN_WIDTH 640
@@ -69,13 +70,17 @@ int main(int argc, char* args[])
 	Sprite grass(Renderer, resourcePath);
 
 	resourcePath = getResourcePath("alienYellow.png");
-	PlayerCharacter player = PlayerCharacter(Renderer, resourcePath);
+	PlayerCharacter player1 = PlayerCharacter(Renderer, resourcePath);
 
+	resourcePath = getResourcePath("alienGreen.png");
+	PlayerCharacter player2 = PlayerCharacter(Renderer, resourcePath);
+	player2.bindKeys(KEY_A, KEY_W, KEY_D, KEY_S);
 
 	InputHandler inputHandler;
 	Timer timer = {0};
 	timer.MSPerUpdate = MS_PER_UPDATE;
 	updateTimer(&timer);
+	FPS_Counter fps_counter = {&timer, 0, 0, 0, 10, true};
 	bool Running = true;
 
 	while(Running) {
@@ -104,7 +109,8 @@ int main(int argc, char* args[])
 		//FixedUpdate//
 		while(timer.accumulator >= timer.MSPerUpdate){
 //			debug("FixedUpdate()");
-			player.update(timer.dt, &inputHandler);
+			player1.update(timer.dt, &inputHandler);
+			player2.update(timer.dt, &inputHandler);
 
 			if(inputHandler.isKeyPressed(KEY_F)) {
 				SDL_SetWindowFullscreen(Window, SDL_WINDOW_FULLSCREEN);
@@ -122,18 +128,20 @@ int main(int argc, char* args[])
 		//Draw Code//
 		SDL_RenderClear(Renderer);
 
-		for(int i = 0; i < 10; i++) {
-			for(int j = 0; j < 10; j++) {
+		for(int i = 0; i <= SCREEN_WIDTH/grass.getWidth(); i++) {
+			for(int j = 0; j <= SCREEN_HEIGHT/grass.getHeight(); j++) {
 				grass.draw(Renderer, i*(grass.getWidth()), j*grass.getHeight());
 			}
 		}
 
-		player.draw(Renderer);
+		player1.draw(Renderer);
+		player2.draw(Renderer);
 
 		char msCounter[200];
 		sprintf(msCounter, "%ums elapsed", timer.msElapsed);
-		drawText(msCounter, font, Renderer, 10, 10);
+		drawText(msCounter, font, Renderer, 10, 40);
 
+		DrawFPS_Counter(&fps_counter, font, Renderer);
 		SDL_RenderPresent(Renderer);
 		///////////
 
@@ -141,8 +149,8 @@ int main(int argc, char* args[])
 		//			when the window is not in focused. Figure out why, this
 		//			current code might cause me some other issues down the line.
 		//			My guess is that vsync turns off when window not in focus.
-		if((timer.OldTime + 17 - SDL_GetTicks()) < 1000) {
-			SDL_Delay(timer.OldTime + 17 - SDL_GetTicks());
+		if((timer.OldTime + 18 - SDL_GetTicks()) < 1000) {
+			SDL_Delay(timer.OldTime + 18 - SDL_GetTicks());
 		}
 	}
 

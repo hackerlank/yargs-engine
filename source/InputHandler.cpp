@@ -16,6 +16,10 @@ InputHandler::~InputHandler()
     delete commands[i];
   }
 }
+void InputHandler::updateInput()
+{
+  //TODO: implement this
+}
 
 void InputHandler::ExecuteCommands()
 {

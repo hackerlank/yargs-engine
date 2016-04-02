@@ -34,3 +34,12 @@ void PlayerCharacter::update(float dt, InputHandler* inputHandler)
     position.y = position.y - amount*dt;
   }
 }
+
+void PlayerCharacter::bindKeys(uint8_t keyLeft, uint8_t keyUp,
+                               uint8_t keyRight, uint8_t keyDown)
+{
+  this->LeftKey = keyLeft;
+  this->UpKey = keyUp;
+  this->RightKey = keyRight;
+  this->DownKey = keyDown;
+}
