@@ -7,8 +7,9 @@
 class GameObject
 {
 public:
-  virtual void draw(SDL_Renderer* renderer, float interpolate) = 0;
-  virtual void update(float dt, InputHandler* inputHandler) = 0;
+  virtual void Draw(SDL_Renderer* renderer, float interpolate) = 0;
+  virtual void FixedUpdate(float dt, InputHandler* inputHandler) = 0;
+  virtual void Update(float dt, InputHandler* inputHandler) = 0;
 };
 
 #endif
