@@ -1,7 +1,7 @@
 CC = clang++
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 
-CFLAGS = -Wall -c -DDEBUG 
+CFLAGS = -Wall -c -DDEBUG -DDEBUGDRAWVECTORS
 LDFLAGS = $(SDL)
 EXECUTABLE = Game
 BUILDDIR = ../build

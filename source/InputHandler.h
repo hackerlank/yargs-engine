@@ -16,7 +16,7 @@ public:
   void updateInput();
   void ExecuteCommands();
   void bindCommandToKey(int Key, Command* command);
-  bool isKeyPressed(int Key);
+  bool isKeyHeldDown(int Key);
 
 private:
   Command* commands[83];

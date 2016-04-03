@@ -8,16 +8,23 @@
 class Sprite
 {
   SDL_Texture* Texture;
-  SDL_Rect SpriteRect;
+  int TextureWidth;
+  int TextureHeight;
+  SDL_Rect ClippedRect;
+  SDL_Rect DestRect;
 
 public:
   Sprite();
   Sprite(SDL_Renderer* renderer, std::string FileNamePath);
+  Sprite(SDL_Renderer* renderer, std::string FileNamePath,
+         int ClipX, int ClipY, int ClipWidth, int ClipHeight);
   ~Sprite();
 
-  void draw(SDL_Renderer* renderer, int x, int y);
+  void draw(SDL_Renderer* renderer, int x, int y, double angle);
   void loadTexture(SDL_Renderer* renderer, std::string FileNamePath);
 
+  int getTextureWidth();
+  int getTextureHeight();
   int getWidth();
   int getHeight();
   int getX();
