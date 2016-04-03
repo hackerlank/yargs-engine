@@ -1,5 +1,6 @@
 #include "PlayerCharacter.h"
 #include <math.h>
+#include <cfloat>
 #include "debug.h"
 
 //NOTE: For some reason, sprite was calling its deconsructor after exiting the
@@ -8,8 +9,8 @@ PlayerCharacter::PlayerCharacter(SDL_Renderer* renderer,
                                  std::string FileNamePath)
                                  :sprite(renderer, FileNamePath)
 {
-  Position = Vector2f(10,10);
-  Velocity = Vector2f(0, 0);
+  Position = Vector2f(10.0f,10.0f);
+  Velocity = Vector2f(0.0f, 0.0f);
   moveUpKey = KEY_UP;
   moveDownKey = KEY_DOWN;
   moveLeftKey = KEY_LEFT;
@@ -34,29 +35,29 @@ void PlayerCharacter::update(float dt, InputHandler* inputHandler)
 {
   float amount = 10.0f;
 
-  Vector2f Acceleration = Vector2f(0,0);
+  Vector2f Acceleration = Vector2f(0.0f,0.0f);
   if(inputHandler->isKeyPressed(moveLeftKey)) {
-    Acceleration.x -= 1;
+    Acceleration.x -= 1.0f;
   }
   if(inputHandler->isKeyPressed(moveRightKey)) {
-    Acceleration.x += 1;
+    Acceleration.x += 1.0f;
   }
   if(inputHandler->isKeyPressed(moveDownKey)) {
-    Acceleration.y += 1;
+    Acceleration.y += 1.0f;
   }
   if(inputHandler->isKeyPressed(moveUpKey)) {
-    Acceleration.y -= 1;
+    Acceleration.y -= 1.0f;
   }
 
   Acceleration.normalize();
   Acceleration = Acceleration * (amount*dt);
 
-  if(Acceleration.getLength() == 0) {
+  if(fabs(Acceleration.getLength()) < FLT_EPSILON) {
     if(fabs(Velocity.x) < 1.0f) {
-      Velocity.x = 0;
+      Velocity.x = 0.0f;
     }
     if(fabs(Velocity.y) < 1.0f) {
-      Velocity.y = 0;
+      Velocity.y = 0.0f;
     }
   }
 
@@ -72,3 +73,13 @@ void PlayerCharacter::bindKeys(uint8_t keyLeft, uint8_t keyUp,
   this->moveRightKey = keyRight;
   this->moveDownKey = keyDown;
 }
+
+#ifdef DEBUG
+Vector2f PlayerCharacter::getVelocity(){
+    return this->Velocity;
+}
+
+Vector2f PlayerCharacter::getPosition(){
+    return this->Position;
+}
+#endif
