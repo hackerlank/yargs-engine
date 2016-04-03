@@ -18,11 +18,13 @@ InputHandler::~InputHandler()
 }
 void InputHandler::updateInput()
 {
-  //TODO: implement this
+  //TODO: Implement this to update pressed keys and held down keys. Also maybe
+  //      throw in a SDL_PumpEvents() in here to tidy up main()
 }
 
 void InputHandler::ExecuteCommands()
 {
+  /*
   if(keystate[KEY_RIGHT]) {
     commands[KEY_RIGHT]->execute();
   }
@@ -41,6 +43,7 @@ void InputHandler::ExecuteCommands()
   if(keystate[KEY_B]) {
     commands[KEY_B]->execute();
   }
+  */
 }
 
 void InputHandler::bindCommandToKey(int Key, Command* command)
@@ -51,7 +54,7 @@ void InputHandler::bindCommandToKey(int Key, Command* command)
   commands[Key] = command;
 }
 
-bool InputHandler::isKeyPressed(int Key)
+bool InputHandler::isKeyHeldDown(int Key)
 {
   return keystate[Key];
 }

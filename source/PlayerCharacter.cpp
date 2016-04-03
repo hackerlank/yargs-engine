@@ -11,10 +11,13 @@ PlayerCharacter::PlayerCharacter(SDL_Renderer* renderer,
 {
   Position = Vector2f(10.0f,10.0f);
   Velocity = Vector2f(0.0f, 0.0f);
+  Rotation = 0;
   moveUpKey = KEY_UP;
   moveDownKey = KEY_DOWN;
   moveLeftKey = KEY_LEFT;
   moveRightKey = KEY_RIGHT;
+  rotateLeftKey = KEY_Q;
+  rotateRightKey = KEY_E;
 }
 
 void PlayerCharacter::draw(SDL_Renderer* renderer, float extrapolate)
@@ -27,25 +30,41 @@ void PlayerCharacter::draw(SDL_Renderer* renderer, float extrapolate)
   //NOTE: This uses nothing*/
   //sprite.draw(renderer, roundf(Position.x), roundf(Position.y));
   //NOTE: This uses extrapolation
-  sprite.draw(renderer, Position.x + extrapolate*Velocity.x,
-              Position.y + extrapolate*Velocity.y);
+  sprite.draw(renderer,
+              (Position.x + extrapolate*Velocity.x) - sprite.getWidth()/2,
+              (Position.y + extrapolate*Velocity.y) - sprite.getHeight()/2,
+              Rotation);
+
+  #ifdef DEBUGDRAWVECTORS
+  SDL_SetRenderDrawColor(renderer, 255,0,0,255);
+  SDL_RenderDrawLine(renderer, Position.x, Position.y,
+                     Velocity.x*15.0f+Position.x, Velocity.y*15.0f+Position.y);
+  #endif
 }
 
 void PlayerCharacter::update(float dt, InputHandler* inputHandler)
 {
-  float amount = 10.0f;
+  float rotationAmount = 90.0f;
+  if(inputHandler->isKeyHeldDown(rotateLeftKey)) {
+    Rotation -=  rotationAmount * dt;
+  }
+  if(inputHandler->isKeyHeldDown(rotateRightKey)) {
+    Rotation +=  rotationAmount * dt;
+  }
 
+  float amount = 10.0f;
   Vector2f Acceleration = Vector2f(0.0f,0.0f);
-  if(inputHandler->isKeyPressed(moveLeftKey)) {
+
+  if(inputHandler->isKeyHeldDown(moveLeftKey)) {
     Acceleration.x -= 1.0f;
   }
-  if(inputHandler->isKeyPressed(moveRightKey)) {
+  if(inputHandler->isKeyHeldDown(moveRightKey)) {
     Acceleration.x += 1.0f;
   }
-  if(inputHandler->isKeyPressed(moveDownKey)) {
+  if(inputHandler->isKeyHeldDown(moveDownKey)) {
     Acceleration.y += 1.0f;
   }
-  if(inputHandler->isKeyPressed(moveUpKey)) {
+  if(inputHandler->isKeyHeldDown(moveUpKey)) {
     Acceleration.y -= 1.0f;
   }
 

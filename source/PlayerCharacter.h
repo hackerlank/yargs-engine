@@ -13,6 +13,7 @@ private:
   Sprite sprite;
   Vector2f Position;
   Vector2f Velocity;
+  double Rotation;
 
 public:
   PlayerCharacter(SDL_Renderer* renderer, std::string FileNamePath);
@@ -30,7 +31,8 @@ public:
   uint8_t moveUpKey;
   uint8_t moveRightKey;
   uint8_t moveDownKey;
-
+  uint8_t rotateLeftKey;
+  uint8_t rotateRightKey;
 };
 
 

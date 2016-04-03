@@ -115,10 +115,10 @@ int main(int argc, char* args[])
 			player1.update(timer.dt, &inputHandler);
 			player2.update(timer.dt, &inputHandler);
 
-			if(inputHandler.isKeyPressed(KEY_F)) {
+			if(inputHandler.isKeyHeldDown(KEY_F)) {
 				SDL_SetWindowFullscreen(Window, SDL_WINDOW_FULLSCREEN);
 			}
-			if(inputHandler.isKeyPressed(KEY_J)) {
+			if(inputHandler.isKeyHeldDown(KEY_J)) {
 				SDL_SetWindowFullscreen(Window, 0);
 			}
 
@@ -133,43 +133,14 @@ int main(int argc, char* args[])
         SDL_SetRenderDrawColor(Renderer, 100, 80, 200, 255);
 		SDL_RenderFillRect(Renderer, &fillRect);
 
-		for(int i = 0; i <= SCREEN_WIDTH/grass.getWidth(); i++) {
-			for(int j = 0; j <= SCREEN_HEIGHT/grass.getHeight(); j++) {
-//				grass.draw(Renderer, i*(grass.getWidth()), j*grass.getHeight());
+		for(int i = 0; i <= SCREEN_WIDTH/grass.getTextureWidth(); i++) {
+			for(int j = 0; j <= SCREEN_HEIGHT/grass.getTextureHeight(); j++) {
+//				grass.draw(Renderer, i*(grass.getWidth()), j*grass.getHeight(), 0);
 			}
 		}
 
 		player1.draw(Renderer, timer.accumulator / (float) timer.MSPerUpdate);
 		player2.draw(Renderer, timer.accumulator / (float) timer.MSPerUpdate);
-
-        #ifdef DEBUG
-
-        Vector2f pos_player1 = player1.getPosition();
-        Vector2f vel_player1 = player1.getVelocity();
-        //vel_player1.normalize();
-        vel_player1 *= 15.0f;
-        //SDL_Rect rect_player1;
-        //rect_player.x = pos_player1.x;
-        //rect_player.y = pos_player1.y;
-        //rect_player.w = FIND_WIDTH;
-        //rect_player.h = FIND_HEIGHT;
-        /*SDL_RenderDrawRect(SDL_Renderer*   renderer,
-                       const SDL_Rect* rect)
-                       */
-        /*int SDL_RenderDrawLines(SDL_Renderer*    renderer,
-                        const SDL_Point* points,
-                        int              count)*/
-        SDL_SetRenderDrawColor(Renderer, 255,0,0,255);
-        SDL_RenderDrawLine(Renderer,pos_player1.x,pos_player1.y,vel_player1.x+pos_player1.x,vel_player1.y+pos_player1.y);
-
-        Vector2f pos_player2 = player2.getPosition();
-        Vector2f vel_player2 = player2.getVelocity();
-        //vel_player2.normalize();
-        vel_player2 *= 15.0f;
-        SDL_RenderDrawLine(Renderer,pos_player2.x,pos_player2.y,vel_player2.x+pos_player2.x,vel_player2.y+pos_player2.y);
-
-
-        #endif
 
 		char msCounter[200];
 		sprintf(msCounter, "%ums elapsed", timer.msElapsed);
