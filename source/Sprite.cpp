@@ -52,6 +52,7 @@ Sprite::Sprite(SDL_Renderer* renderer, std::string FileNamePath,
 
 Sprite::~Sprite()
 {
+  debug("Sprite Class: Destroyed Texture");
   SDL_DestroyTexture(Texture);
 }
 

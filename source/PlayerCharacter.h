@@ -2,12 +2,13 @@
 #define __PLAYERCHARACTER_H__
 
 #include <stdint.h>
+#include "GameObject.h"
 #include "Sprite.h"
 #include "InputHandler.h"
 #include "math/Vector2f.h"
 
 
-class PlayerCharacter
+class PlayerCharacter : public virtual GameObject
 {
 private:
   Sprite sprite;

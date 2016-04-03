@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "debug.h"
 
@@ -76,13 +77,16 @@ int main(int argc, char* args[])
 	PlayerCharacter player2 = PlayerCharacter(Renderer, resourcePath);
 	player2.bindKeys(KEY_A, KEY_W, KEY_D, KEY_S, KEY_Q, KEY_E);
 
+	std::vector<GameObject*> gameObjects;
+	gameObjects.push_back(&player1);
+	gameObjects.push_back(&player2);
+
 	InputHandler inputHandler;
 	Timer timer = {0};
 	timer.MSPerUpdate = MS_PER_UPDATE;
 	updateTimer(&timer);
 	FPS_Counter fps_counter = {&timer, 0, 0, 0, 10, true};
 	bool Running = true;
-
 
 	SDL_Rect fillRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
@@ -112,8 +116,9 @@ int main(int argc, char* args[])
 		//FixedUpdate//
 		while(timer.accumulator >= timer.MSPerUpdate){
 //			debug("FixedUpdate()");
-			player1.update(timer.dt, &inputHandler);
-			player2.update(timer.dt, &inputHandler);
+			for(int object = 0; object < gameObjects.size(); object++) {
+				gameObjects[object]->update(timer.dt, &inputHandler);
+			}
 
 			if(inputHandler.isKeyHeldDown(KEY_F)) {
 				SDL_SetWindowFullscreen(Window, SDL_WINDOW_FULLSCREEN);
@@ -139,8 +144,10 @@ int main(int argc, char* args[])
 			}
 		}
 
-		player1.draw(Renderer, timer.accumulator / (float) timer.MSPerUpdate);
-		player2.draw(Renderer, timer.accumulator / (float) timer.MSPerUpdate);
+		for(int object = 0; object < gameObjects.size(); object++) {
+			gameObjects[object]->draw(Renderer,
+																timer.accumulator/ (float) timer.MSPerUpdate);
+		}
 
 		char msCounter[200];
 		sprintf(msCounter, "%ums elapsed", timer.msElapsed);
@@ -150,15 +157,7 @@ int main(int argc, char* args[])
 		SDL_RenderPresent(Renderer);
 		///////////
 
-		//TODO: This is a bit sloppy but it prevents the cpu from spiking
-		//			when the window is not in focused. Figure out why, this
-		//			current code might cause me some other issues down the line.
-		//			My guess is that vsync turns off when window not in focus.
-		if((timer.OldTime + 18 - SDL_GetTicks()) < 1000) {
-//			SDL_Delay(timer.OldTime + 18 - SDL_GetTicks());
-		}
-	}
-
+	}//End Game Loop
 
 	return 0;
 }
