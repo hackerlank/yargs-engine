@@ -61,7 +61,10 @@ int main(int argc, char* args[])
 {
 	SDL_Window* Window = 0;
 	SDL_Renderer* Renderer = 0;
-	Initialize(Window, Renderer);
+	if(!Initialize(Window, Renderer)) {
+		debug("Could not intialize window and renderer.");
+		return 1;
+	}
 
 	std::string resourcePath;
 	resourcePath = getResourcePath("fonts/consola.ttf");
@@ -89,6 +92,7 @@ int main(int argc, char* args[])
 	bool Running = true;
 
 	SDL_Rect fillRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	SDL_Rect ViewportRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
 	while(Running) {
 		updateTimer(&timer);
@@ -117,7 +121,7 @@ int main(int argc, char* args[])
 		while(timer.accumulator >= timer.MSPerUpdate){
 //			debug("FixedUpdate()");
 			for(int object = 0; object < gameObjects.size(); object++) {
-				gameObjects[object]->update(timer.dt, &inputHandler);
+				gameObjects[object]->FixedUpdate(timer.dt, &inputHandler);
 			}
 
 			if(inputHandler.isKeyHeldDown(KEY_F)) {
@@ -127,6 +131,13 @@ int main(int argc, char* args[])
 				SDL_SetWindowFullscreen(Window, 0);
 			}
 
+			if(inputHandler.isKeyHeldDown(KEY_LEFT)) {
+//				ViewportRect.x += timer.dt*200.0f;
+			}
+			if(inputHandler.isKeyHeldDown(KEY_RIGHT)) {
+//				ViewportRect.x -= timer.dt*200.0f;
+			}
+
 			SDL_PumpEvents();	//update keyboard state
 			timer.accumulator -= timer.MSPerUpdate;
 		}
@@ -134,8 +145,14 @@ int main(int argc, char* args[])
 
 
 		//Draw Code//
+		SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 		SDL_RenderClear(Renderer);
-        SDL_SetRenderDrawColor(Renderer, 100, 80, 200, 255);
+
+		if(SDL_RenderSetViewport(Renderer, &ViewportRect) != 0) {
+			debugSDL();
+		}
+
+    SDL_SetRenderDrawColor(Renderer, 100, 80, 200, 255);
 		SDL_RenderFillRect(Renderer, &fillRect);
 
 		for(int i = 0; i <= SCREEN_WIDTH/grass.getTextureWidth(); i++) {
@@ -145,7 +162,7 @@ int main(int argc, char* args[])
 		}
 
 		for(int object = 0; object < gameObjects.size(); object++) {
-			gameObjects[object]->draw(Renderer,
+			gameObjects[object]->Draw(Renderer,
 																timer.accumulator/ (float) timer.MSPerUpdate);
 		}
 

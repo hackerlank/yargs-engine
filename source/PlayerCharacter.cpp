@@ -20,7 +20,7 @@ PlayerCharacter::PlayerCharacter(SDL_Renderer* renderer,
   rotateRightKey = 0;
 }
 
-void PlayerCharacter::draw(SDL_Renderer* renderer, float extrapolate)
+void PlayerCharacter::Draw(SDL_Renderer* renderer, float extrapolate)
 {
   /*
   //NOTE: This uses interpolation
@@ -44,7 +44,7 @@ void PlayerCharacter::draw(SDL_Renderer* renderer, float extrapolate)
   #endif
 }
 
-void PlayerCharacter::update(float dt, InputHandler* inputHandler)
+void PlayerCharacter::FixedUpdate(float dt, InputHandler* inputHandler)
 {
   float rotationAmount = 90.0f;
   if(inputHandler->isKeyHeldDown(rotateLeftKey)) {
@@ -84,6 +84,11 @@ void PlayerCharacter::update(float dt, InputHandler* inputHandler)
 
   Velocity = Velocity + Acceleration;
   Position = Position + Velocity;
+}
+
+void PlayerCharacter::Update(float dt, InputHandler* inputHandler)
+{
+  //do nothing
 }
 
 void PlayerCharacter::bindKeys(uint8_t keyLeft, uint8_t keyUp,
