@@ -12,6 +12,7 @@ struct Vector2f
   Vector2f operator+(const Vector2f& other);
   Vector2f operator-(const Vector2f& other);
   Vector2f operator*(const float scaleAmount);
+  void operator*=(const float scaleAmount);
   void operator=(const Vector2f& other);
 
   Vector2f getNormal();

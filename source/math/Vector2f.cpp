@@ -5,8 +5,8 @@
 
 Vector2f::Vector2f()
 {
-  x = 0;
-  y = 0;
+  x = 0.0f;
+  y = 0.0f;
 }
 Vector2f::Vector2f(float x, float y)
 {
@@ -31,6 +31,11 @@ Vector2f Vector2f::operator*(const float scaleAmount)
   float X = x*scaleAmount;
   float Y = y*scaleAmount;
   return Vector2f(X, Y);
+}
+void Vector2f::operator*=(const float scaleAmount)
+{
+  x *= scaleAmount;
+  y *= scaleAmount;
 }
 void Vector2f::operator=(const Vector2f& other)
 {

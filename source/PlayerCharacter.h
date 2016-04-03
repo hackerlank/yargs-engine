@@ -21,10 +21,16 @@ public:
   void bindKeys(uint8_t keyLeft, uint8_t keyUp,
                 uint8_t keyRight, uint8_t keyDown);
 
+  #ifdef DEBUG
+  Vector2f getVelocity();
+  Vector2f getPosition();
+  #endif
+
   uint8_t moveLeftKey;
   uint8_t moveUpKey;
   uint8_t moveRightKey;
   uint8_t moveDownKey;
+
 };
 
 

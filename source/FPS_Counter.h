@@ -21,8 +21,8 @@ void DrawFPS_Counter(FPS_Counter* fps_counter,
   if(fps_counter->DisplayedFrames > fps_counter->FramesToAverage) {
     fps_counter->AverageFPS = fps_counter->DisplayedFrames/
                               fps_counter->TimeSinceLastAverage;
-    fps_counter->DisplayedFrames = 0;
-    fps_counter->TimeSinceLastAverage = 0;
+    fps_counter->DisplayedFrames = 0.0f;
+    fps_counter->TimeSinceLastAverage = 0.0f;
   }
   char fpsString[200];
   sprintf(fpsString, "FPS: %.0f", fps_counter->AverageFPS);
