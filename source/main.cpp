@@ -74,7 +74,7 @@ int main(int argc, char* args[])
 
 	resourcePath = getResourcePath("alienGreen.png");
 	PlayerCharacter player2 = PlayerCharacter(Renderer, resourcePath);
-	player2.bindKeys(KEY_A, KEY_W, KEY_D, KEY_S);
+	player2.bindKeys(KEY_A, KEY_W, KEY_D, KEY_S, KEY_Q, KEY_E);
 
 	InputHandler inputHandler;
 	Timer timer = {0};

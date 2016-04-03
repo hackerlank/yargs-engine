@@ -16,8 +16,8 @@ PlayerCharacter::PlayerCharacter(SDL_Renderer* renderer,
   moveDownKey = KEY_DOWN;
   moveLeftKey = KEY_LEFT;
   moveRightKey = KEY_RIGHT;
-  rotateLeftKey = KEY_Q;
-  rotateRightKey = KEY_E;
+  rotateLeftKey = 0;
+  rotateRightKey = 0;
 }
 
 void PlayerCharacter::draw(SDL_Renderer* renderer, float extrapolate)
@@ -37,8 +37,10 @@ void PlayerCharacter::draw(SDL_Renderer* renderer, float extrapolate)
 
   #ifdef DEBUGDRAWVECTORS
   SDL_SetRenderDrawColor(renderer, 255,0,0,255);
-  SDL_RenderDrawLine(renderer, Position.x, Position.y,
-                     Velocity.x*15.0f+Position.x, Velocity.y*15.0f+Position.y);
+  SDL_RenderDrawLine(renderer, (Position.x + extrapolate*Velocity.x),
+                     (Position.y + extrapolate*Velocity.y),
+                     Velocity.x*15.0f+(Position.x + extrapolate*Velocity.x),
+                     Velocity.y*15.0f+(Position.y + extrapolate*Velocity.y));
   #endif
 }
 
@@ -85,12 +87,15 @@ void PlayerCharacter::update(float dt, InputHandler* inputHandler)
 }
 
 void PlayerCharacter::bindKeys(uint8_t keyLeft, uint8_t keyUp,
-                               uint8_t keyRight, uint8_t keyDown)
+                               uint8_t keyRight, uint8_t keyDown,
+                               uint8_t rotateLeftKey, uint8_t rotateRightKey)
 {
   this->moveLeftKey = keyLeft;
   this->moveUpKey = keyUp;
   this->moveRightKey = keyRight;
   this->moveDownKey = keyDown;
+  this->rotateLeftKey = rotateLeftKey;
+  this->rotateRightKey = rotateRightKey;
 }
 
 #ifdef DEBUG

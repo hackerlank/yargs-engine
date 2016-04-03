@@ -56,5 +56,6 @@ void InputHandler::bindCommandToKey(int Key, Command* command)
 
 bool InputHandler::isKeyHeldDown(int Key)
 {
+  if(Key == KEY_NULL) return false;
   return keystate[Key];
 }

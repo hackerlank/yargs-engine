@@ -20,7 +20,8 @@ public:
   void draw(SDL_Renderer* renderer, float interpolate);
   void update(float dt, InputHandler* inputHandler);
   void bindKeys(uint8_t keyLeft, uint8_t keyUp,
-                uint8_t keyRight, uint8_t keyDown);
+                uint8_t keyRight, uint8_t keyDown,
+                uint8_t rotateLeftKey, uint8_t rotateRightKey);
 
   #ifdef DEBUG
   Vector2f getVelocity();
