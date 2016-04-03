@@ -5,7 +5,7 @@
 Sprite::Sprite()
 {
   Texture = 0;
-  SpriteRect.x = 0.;
+  SpriteRect.x = 0;
   SpriteRect.y = 0;
   SpriteRect.w = 0;
   SpriteRect.h = 0;
