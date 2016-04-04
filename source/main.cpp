@@ -63,6 +63,8 @@ bool Initialize(SDL_Window* &Window, SDL_Renderer* &Renderer)
 		debugSDL();
 		return false;
 	}
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
+	SDL_RenderSetLogicalSize(Renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 	return true;
 }
 
@@ -165,6 +167,13 @@ void GameLoop()
 		viewport.PanDown(timer.TimeElapsed, 600.0f);
 	}
 
+	if(inputHandler.isKeyHeldDown(KEY_F)) {
+		SDL_SetWindowFullscreen(Window, SDL_WINDOW_FULLSCREEN);
+	}
+	if(inputHandler.isKeyHeldDown(KEY_J)) {
+		SDL_SetWindowFullscreen(Window, 0);
+	}
+
 	for(int object = 0; object < gameObjects.size(); object++) {
 		gameObjects[object]->Update(timer.TimeElapsed, &inputHandler);
 	}
@@ -176,13 +185,6 @@ void GameLoop()
 
 		for(int object = 0; object < gameObjects.size(); object++) {
 			gameObjects[object]->FixedUpdate(timer.dt, &inputHandler);
-		}
-
-		if(inputHandler.isKeyHeldDown(KEY_F)) {
-			SDL_SetWindowFullscreen(Window, SDL_WINDOW_FULLSCREEN);
-		}
-		if(inputHandler.isKeyHeldDown(KEY_J)) {
-			SDL_SetWindowFullscreen(Window, 0);
 		}
 
 		SDL_PumpEvents();	//update keyboard state
