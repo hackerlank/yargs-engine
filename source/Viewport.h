@@ -21,6 +21,7 @@ private:
   SDL_Window* Window;
 
 public:
+    Viewport();
     Viewport(SDL_Renderer* Renderer, SDL_Window* Window);
     ~Viewport();
     void Clear();

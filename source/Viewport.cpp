@@ -1,5 +1,10 @@
 #include "Viewport.h"
 
+Viewport::Viewport()
+{
+  Renderer = 0;
+  Window = 0;
+}
 Viewport::Viewport(SDL_Renderer* Renderer, SDL_Window* Window)
 {
   this->Renderer = Renderer;

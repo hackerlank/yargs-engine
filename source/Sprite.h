@@ -2,7 +2,12 @@
 #define __SPRITE_H__
 
 #include <SDL2/SDL.h>
+
+#ifdef EMSCRIPTEN
+#include <SDL_image.h>
+#else
 #include <SDL2_image/SDL_image.h>
+#endif
 
 #include "Viewport.h"
 #include <string>

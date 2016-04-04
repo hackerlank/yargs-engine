@@ -2,8 +2,14 @@
 #define __UTILITY_H__
 
 #include <SDL2/SDL.h>
+
+#ifdef EMSCRIPTEN
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#else
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
+#endif
 
 #include <string>
 

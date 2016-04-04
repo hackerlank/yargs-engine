@@ -2,7 +2,9 @@ CC = clang++
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 
 CFLAGS = -Wall -Wfloat-equal -c -D DEBUG -D DEBUGDRAWVECTORS
+
 MORECFLAGS = #-Wextra -Wunreachable-code
+
 LDFLAGS = $(SDL)
 EXECUTABLE = Game
 BUILDDIR = ../build
@@ -18,7 +20,7 @@ all: $(EXECUTABLE)
 	@mv *.o $(EXECUTABLE) $(BUILDDIR)
 
 $(EXECUTABLE): $(SOURCES)
-	$(CC) $(LDFLAGS) $^ -o $@
+	$(CC) $(LDFLAGS) $^ -o $(EXECUTABLE)
 
 main.o: main.cpp
 	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
