@@ -35,13 +35,19 @@ void Viewport::Present()
 }
 
 void Viewport::RenderToViewport(SDL_Texture* Texture, const SDL_Rect* srcRect,
-                      SDL_Rect* dstRect, const double angle,
+                      SDL_Rect dstRect, const double angle,
                       const SDL_Point* center, const SDL_RendererFlip flip,
                       int xLocation, int yLocation)
 {
-  dstRect->x = xLocation - (int)ScreenX;
-  dstRect->y = yLocation - (int)ScreenY;
-  SDL_RenderCopyEx(Renderer, Texture, srcRect, dstRect, angle, center, flip);
+  dstRect.x = xLocation - (int)ScreenX;
+  dstRect.y = yLocation - (int)ScreenY;
+  dstRect.w *=  Zoom;
+  dstRect.h *=  Zoom;
+  SDL_RenderCopyEx(Renderer, Texture, srcRect, &dstRect, angle, center, flip);
+}
+
+void Viewport::ZoomIn(float dt, float amount) {
+  Zoom += dt*amount;
 }
 
 void Viewport::PanLeft(float dt, float amount)

@@ -72,11 +72,9 @@ void PlayerCharacter::FixedUpdate(float dt, InputHandler* inputHandler)
   Acceleration.normalize();
   Acceleration = Acceleration * (amount*dt);
 
-  if(fabs(Acceleration.getLength()) < FLT_EPSILON) {
-    if(fabs(Velocity.x) < 1.0f) {
+  if(fabs(Acceleration.x + Acceleration.y) < FLT_EPSILON) {
+    if(fabs(Velocity.x) < .7f && fabs(Velocity.y) < .7f) {
       Velocity.x = 0.0f;
-    }
-    if(fabs(Velocity.y) < 1.0f) {
       Velocity.y = 0.0f;
     }
   }

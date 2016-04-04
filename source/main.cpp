@@ -101,11 +101,12 @@ int main(int argc, char* args[])
 	resourcePath = getResourcePath("fonts/consola.ttf");
 	font = loadFont(resourcePath, 18);
 
-	resourcePath = getResourcePath("grass.png");
+	resourcePath = getResourcePath("dirt.png");
 	grass = new Sprite(Renderer, resourcePath);
 
 	resourcePath = getResourcePath("blackline.png");
 	PlayerCharacter player1 = PlayerCharacter(Renderer, resourcePath);
+	player1.bindKeys(KEY_LEFT, KEY_UP, KEY_RIGHT, KEY_DOWN, KEY_Q, KEY_E);
 
 	resourcePath = getResourcePath("alienGreen.png");
 	PlayerCharacter player2 = PlayerCharacter(Renderer, resourcePath);
@@ -154,17 +155,24 @@ void GameLoop()
 
 
 	////////////////////////////Update/////////////////////////////
-	if(inputHandler.isKeyHeldDown(KEY_LEFT)) {
+	if(inputHandler.isKeyHeldDown(KEY_M)) {
 		viewport.PanLeft(timer.TimeElapsed, 600.0f);
 	}
-	if(inputHandler.isKeyHeldDown(KEY_RIGHT)) {
+	if(inputHandler.isKeyHeldDown(KEY_K)) {
 		viewport.PanRight(timer.TimeElapsed, 600.0f);
 	}
-	if(inputHandler.isKeyHeldDown(KEY_UP)) {
+	if(inputHandler.isKeyHeldDown(KEY_J)) {
 		viewport.PanUp(timer.TimeElapsed, 600.0f);
 	}
-	if(inputHandler.isKeyHeldDown(KEY_DOWN)) {
+	if(inputHandler.isKeyHeldDown(KEY_N)) {
 		viewport.PanDown(timer.TimeElapsed, 600.0f);
+	}
+
+	if(inputHandler.isKeyHeldDown(KEY_I)) {
+		viewport.ZoomIn(timer.TimeElapsed, .2f);
+	}
+	if(inputHandler.isKeyHeldDown(KEY_O)) {
+		viewport.ZoomIn(timer.TimeElapsed, -.2f);
 	}
 
 	if(inputHandler.isKeyHeldDown(KEY_F)) {
@@ -181,6 +189,7 @@ void GameLoop()
 
 
 	//////////////////////////FixedUpdate/////////////////////////
+	int count = 0;
 	while(timer.accumulator >= timer.MSPerUpdate){
 
 		for(int object = 0; object < gameObjects.size(); object++) {
@@ -189,6 +198,7 @@ void GameLoop()
 
 		SDL_PumpEvents();	//update keyboard state
 		timer.accumulator -= timer.MSPerUpdate;
+		if(count++ > 10) break;
 	}
 	/************************************************************/
 
