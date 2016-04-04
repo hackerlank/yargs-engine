@@ -3,11 +3,12 @@
 
 #include <SDL2/SDL.h>
 #include "InputHandler.h"
+#include "Viewport.h"
 
 class GameObject
 {
 public:
-  virtual void Draw(SDL_Renderer* renderer, float interpolate) = 0;
+  virtual void Draw(Viewport* viewport, float interpolate) = 0;
   virtual void FixedUpdate(float dt, InputHandler* inputHandler) = 0;
   virtual void Update(float dt, InputHandler* inputHandler) = 0;
 };
