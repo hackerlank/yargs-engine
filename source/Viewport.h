@@ -11,10 +11,11 @@ class Viewport
 {
 private:
   Vector2f CenterPosition;
-  int ScreenX;
-  int ScreenY;
+  float ScreenX;
+  float ScreenY;
   int ScreenWidth;
   int ScreenHeight;
+  float Zoom;
 //  uint8_t moveLeftKey, moveRightKey, moveUpKey, moveDownKey;
   SDL_Renderer* Renderer;
   SDL_Window* Window;

@@ -4,11 +4,11 @@ Viewport::Viewport(SDL_Renderer* Renderer, SDL_Window* Window)
 {
   this->Renderer = Renderer;
   this->Window = Window;
-  ScreenX = 0;
-  ScreenY = 0;
+  ScreenX = 0.0f;
+  ScreenY = 0.0f;
   SDL_GetWindowSize(Window, &ScreenWidth, &ScreenHeight);
   CenterPosition = Vector2f(ScreenWidth/2, ScreenHeight/2);
-  debug("CenterPosition (%f, %f)", CenterPosition.x ,CenterPosition.y);
+  Zoom = 1.0f;
 }
 Viewport::~Viewport()
 {
@@ -17,11 +17,11 @@ Viewport::~Viewport()
 
 void Viewport::Clear()
 {
-  SDL_RenderClear(Renderer);
+  this->Clear(0, 0, 0, 255);
 }
 void Viewport::Clear(int r, int g, int b, int a)
 {
-  SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+  SDL_SetRenderDrawColor(Renderer, r, g, b, a);
   SDL_RenderClear(Renderer);
 }
 void Viewport::Present()
@@ -34,27 +34,28 @@ void Viewport::RenderToViewport(SDL_Texture* Texture, const SDL_Rect* srcRect,
                       const SDL_Point* center, const SDL_RendererFlip flip,
                       int xLocation, int yLocation)
 {
-  dstRect->x = xLocation - CenterPosition.x + ScreenWidth/2;
-  dstRect->y = yLocation - CenterPosition.y + ScreenHeight/2;
+  dstRect->x = xLocation - (int)ScreenX;
+  dstRect->y = yLocation - (int)ScreenY;
   SDL_RenderCopyEx(Renderer, Texture, srcRect, dstRect, angle, center, flip);
 }
 
 void Viewport::PanLeft(float dt, float amount)
 {
+  ScreenX -= amount*dt;
   CenterPosition.x -= amount*dt;
 }
 void Viewport::PanRight(float dt, float amount)
 {
-  CenterPosition.x+= amount*dt;
-  ScreenX += CenterPosition.x;
+  ScreenX += amount*dt;
+  CenterPosition.x += amount*dt;
 }
 void Viewport::PanUp(float dt, float amount)
 {
+  ScreenY -= amount*dt;
   CenterPosition.y -= amount*dt;
-  ScreenY -= CenterPosition.y;
 }
 void Viewport::PanDown(float dt, float amount)
 {
+  ScreenY += amount*dt;
   CenterPosition.y += amount*dt;
-  ScreenY += CenterPosition.y;
 }

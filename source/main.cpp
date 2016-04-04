@@ -20,8 +20,8 @@
 #include "Viewport.h"
 
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
 #define WINDOW_TITLE "Hello World"
 #define MS_PER_UPDATE 16					//Our target ms per update, 16 is about 60fps
 
@@ -66,6 +66,7 @@ int main(int argc, char* args[])
 		debug("Could not intialize window and renderer.");
 		return 1;
 	}
+	Viewport viewport = Viewport(Renderer, Window);
 
 	std::string resourcePath;
 	resourcePath = getResourcePath("fonts/consola.ttf");
@@ -86,16 +87,16 @@ int main(int argc, char* args[])
 	gameObjects.push_back(&player1);
 
 
-	Viewport viewport = Viewport(Renderer, Window);
 
 	InputHandler inputHandler;
+
 	Timer timer = {0};
 	timer.MSPerUpdate = MS_PER_UPDATE;
 	updateTimer(&timer);
-	FPS_Counter fps_counter = {&timer, 0, 0, 0, 10, true};
-	bool Running = true;
 
-	SDL_Rect fillRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	FPS_Counter fps_counter = {&timer, 0, 0, 0, 5, true};
+
+	bool Running = true;
 
 	while(Running) {
 		updateTimer(&timer);
@@ -136,7 +137,7 @@ int main(int argc, char* args[])
 		for(int object = 0; object < gameObjects.size(); object++) {
 			gameObjects[object]->Update(timer.TimeElapsed, &inputHandler);
 		}
-		//////////
+		/*********/
 
 
 		//FixedUpdate//
@@ -156,14 +157,11 @@ int main(int argc, char* args[])
 			SDL_PumpEvents();	//update keyboard state
 			timer.accumulator -= timer.MSPerUpdate;
 		}
-		////////////
+		/************/
 
 
 		//Draw Code//
-		viewport.Clear(0, 0, 0, 255);
-
-    SDL_SetRenderDrawColor(Renderer, 100, 80, 200, 255);
-		SDL_RenderFillRect(Renderer, &fillRect);
+		viewport.Clear(45, 120, 200, 255);
 
 		for(int i = 0; i <= SCREEN_WIDTH/grass.getTextureWidth(); i++) {
 			for(int j = 0; j <= SCREEN_HEIGHT/grass.getTextureHeight(); j++) {
@@ -183,7 +181,7 @@ int main(int argc, char* args[])
 		DrawFPS_Counter(&fps_counter, font, Renderer);
 
 		viewport.Present();
-		///////////
+		/************/
 
 	}//End Game Loop
 

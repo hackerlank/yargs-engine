@@ -1,7 +1,8 @@
 CC = clang++
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 
-CFLAGS = -Wall -c -DDEBUG -DDEBUGDRAWVECTORS
+CFLAGS = -Wall -Wfloat-equal -c -D DEBUG -D DEBUGDRAWVECTORS
+MORECFLAGS = #-Wextra -Wunreachable-code
 LDFLAGS = $(SDL)
 EXECUTABLE = Game
 BUILDDIR = ../build
@@ -20,28 +21,28 @@ $(EXECUTABLE): $(SOURCES)
 	$(CC) $(LDFLAGS) $^ -o $@
 
 main.o: main.cpp
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
 
 PlayerCharacter.o: PlayerCharacter.cpp
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
 
 Viewport.o: Viewport.cpp
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
 
 InputHandler.o: InputHandler.cpp
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
 
 Command.o: Command.cpp
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
 
 Utility.o: Utility.cpp
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
 
 Sprite.o: Sprite.cpp
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
 
 Vector2f.o: math/Vector2f.cpp
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
 
 
 clean:

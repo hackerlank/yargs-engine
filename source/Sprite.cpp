@@ -58,6 +58,7 @@ Sprite::~Sprite()
 
 void Sprite::draw(Viewport* viewport, int x, int y, double angle)
 {
+  
   viewport->RenderToViewport(Texture, &ClippedRect, &DestRect, angle, 0, SDL_FLIP_NONE, x, y);
 }
 
