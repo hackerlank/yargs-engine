@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
+
+#include "Viewport.h"
 #include <string>
 
 class Sprite
@@ -20,7 +22,7 @@ public:
          int ClipX, int ClipY, int ClipWidth, int ClipHeight);
   ~Sprite();
 
-  void draw(SDL_Renderer* renderer, int x, int y, double angle);
+  void draw(Viewport* viewport, int x, int y, double angle);
   void loadTexture(SDL_Renderer* renderer, std::string FileNamePath);
 
   int getTextureWidth();

@@ -17,6 +17,7 @@
 #include "InputHandler.h"
 #include "PlayerCharacter.h"
 #include "FPS_Counter.h"
+#include "Viewport.h"
 
 
 #define SCREEN_WIDTH 640
@@ -81,8 +82,11 @@ int main(int argc, char* args[])
 	player2.bindKeys(KEY_A, KEY_W, KEY_D, KEY_S, KEY_Q, KEY_E);
 
 	std::vector<GameObject*> gameObjects;
-	gameObjects.push_back(&player1);
 	gameObjects.push_back(&player2);
+	gameObjects.push_back(&player1);
+
+
+	Viewport viewport = Viewport(Renderer, Window);
 
 	InputHandler inputHandler;
 	Timer timer = {0};
@@ -92,7 +96,6 @@ int main(int argc, char* args[])
 	bool Running = true;
 
 	SDL_Rect fillRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-	SDL_Rect ViewportRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
 	while(Running) {
 		updateTimer(&timer);
@@ -116,6 +119,25 @@ int main(int argc, char* args[])
 			}
 		}
 
+		//Update//
+		if(inputHandler.isKeyHeldDown(KEY_LEFT)) {
+			viewport.PanLeft(timer.TimeElapsed, 600.0f);
+		}
+		if(inputHandler.isKeyHeldDown(KEY_RIGHT)) {
+			viewport.PanRight(timer.TimeElapsed, 600.0f);
+		}
+		if(inputHandler.isKeyHeldDown(KEY_UP)) {
+			viewport.PanUp(timer.TimeElapsed, 600.0f);
+		}
+		if(inputHandler.isKeyHeldDown(KEY_DOWN)) {
+			viewport.PanDown(timer.TimeElapsed, 600.0f);
+		}
+
+		for(int object = 0; object < gameObjects.size(); object++) {
+			gameObjects[object]->Update(timer.TimeElapsed, &inputHandler);
+		}
+		//////////
+
 
 		//FixedUpdate//
 		while(timer.accumulator >= timer.MSPerUpdate){
@@ -131,13 +153,6 @@ int main(int argc, char* args[])
 				SDL_SetWindowFullscreen(Window, 0);
 			}
 
-			if(inputHandler.isKeyHeldDown(KEY_LEFT)) {
-//				ViewportRect.x += timer.dt*200.0f;
-			}
-			if(inputHandler.isKeyHeldDown(KEY_RIGHT)) {
-//				ViewportRect.x -= timer.dt*200.0f;
-			}
-
 			SDL_PumpEvents();	//update keyboard state
 			timer.accumulator -= timer.MSPerUpdate;
 		}
@@ -145,24 +160,19 @@ int main(int argc, char* args[])
 
 
 		//Draw Code//
-		SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
-		SDL_RenderClear(Renderer);
-
-		if(SDL_RenderSetViewport(Renderer, &ViewportRect) != 0) {
-			debugSDL();
-		}
+		viewport.Clear(0, 0, 0, 255);
 
     SDL_SetRenderDrawColor(Renderer, 100, 80, 200, 255);
 		SDL_RenderFillRect(Renderer, &fillRect);
 
 		for(int i = 0; i <= SCREEN_WIDTH/grass.getTextureWidth(); i++) {
 			for(int j = 0; j <= SCREEN_HEIGHT/grass.getTextureHeight(); j++) {
-//				grass.draw(Renderer, i*(grass.getWidth()), j*grass.getHeight(), 0);
+				grass.draw(&viewport, i*(grass.getWidth()), j*grass.getHeight(), 0);
 			}
 		}
 
 		for(int object = 0; object < gameObjects.size(); object++) {
-			gameObjects[object]->Draw(Renderer,
+			gameObjects[object]->Draw(&viewport,
 																timer.accumulator/ (float) timer.MSPerUpdate);
 		}
 
@@ -171,7 +181,8 @@ int main(int argc, char* args[])
 		drawText(msCounter, font, Renderer, 10, 40);
 
 		DrawFPS_Counter(&fps_counter, font, Renderer);
-		SDL_RenderPresent(Renderer);
+
+		viewport.Present();
 		///////////
 
 	}//End Game Loop

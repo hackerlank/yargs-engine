@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 struct Timer {
-  double TimeElapsed;      //since last frame
+  float TimeElapsed;      //since last frame (in seconds)
   uint32_t OldTime;
   uint32_t CurrentTime;
   uint32_t msElapsed;

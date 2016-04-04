@@ -56,11 +56,9 @@ Sprite::~Sprite()
   SDL_DestroyTexture(Texture);
 }
 
-void Sprite::draw(SDL_Renderer* renderer, int x, int y, double angle)
+void Sprite::draw(Viewport* viewport, int x, int y, double angle)
 {
-  DestRect.x = x;
-  DestRect.y = y;
-  SDL_RenderCopyEx(renderer, Texture, 0, &DestRect, angle, 0, SDL_FLIP_NONE);
+  viewport->RenderToViewport(Texture, &ClippedRect, &DestRect, angle, 0, SDL_FLIP_NONE, x, y);
 }
 
 void Sprite::loadTexture(SDL_Renderer* renderer, std::string FileNamePath)

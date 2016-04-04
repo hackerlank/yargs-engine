@@ -7,7 +7,7 @@ EXECUTABLE = Game
 BUILDDIR = ../build
 
 SOURCES = main.o Utility.o Sprite.o Vector2f.o InputHandler.o Command.o \
-PlayerCharacter.o
+PlayerCharacter.o Viewport.o
 
 # $< is the name of the first prereq
 # $@ is the name of the target of the rule
@@ -23,6 +23,9 @@ main.o: main.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
 PlayerCharacter.o: PlayerCharacter.cpp
+	$(CC) $(CFLAGS) $< -o $@
+
+Viewport.o: Viewport.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
 InputHandler.o: InputHandler.cpp
