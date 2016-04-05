@@ -34,9 +34,8 @@
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
-#define WINDOW_TITLE "Hello World"
+#define WINDOW_TITLE "I wonder if Marios will notice the title change"
 #define MS_PER_UPDATE 16					//Our target ms per update, 16 is about 60fps
-#define TRACKED_CHARACTER_PADDING 15
 
 void GameLoop();
 
@@ -179,12 +178,8 @@ void GameLoop()
 
 	//////////////////////////Draw Code//////////////////////////
 	viewport.Clear(45, 120, 200, 255);
-	//Keep tracked object in viewport
-	if(peekState(&states)->getTrackedPlayer() != NULL){
-		peekState(&states)->getTrackedPlayer()->panToIncludeInViewport(&viewport, TRACKED_CHARACTER_PADDING, timer.accumulator/ (float) timer.MSPerUpdate);
-	}
 
-	peekState(&states)->Draw(&viewport, timer.dt);
+	peekState(&states)->Draw(&viewport,timer.accumulator/(float)timer.MSPerUpdate);
 
 	char msCounter[200];
 	sprintf(msCounter, "%ums elapsed", timer.msElapsed);

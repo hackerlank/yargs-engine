@@ -16,7 +16,6 @@ private:
   PlayerCharacter player1;
   PlayerCharacter player2;
   Sprite grass;
-  PlayerCharacter *trackedCharacter;
 
 public:
   GameStateMain(std::stack<GameState*> *states, SDL_Renderer* Renderer);
@@ -24,7 +23,6 @@ public:
   virtual void Draw(Viewport* viewport, const float extrapolate);
   virtual void Update(const float dt, InputHandler* inputHandler, Viewport* viewport);
   virtual void FixedUpdate(const float dt, InputHandler* inputHandler);
-  virtual PlayerCharacter* getTrackedPlayer();
 
 };
 
