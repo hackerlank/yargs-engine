@@ -42,7 +42,16 @@ void Vector2f::operator=(const Vector2f& other)
   x = other.x;
   y = other.y;
 }
-
+void Vector2f::operator=(const int& setTo)
+{
+  x = setTo;
+  y = setTo;
+}
+void Vector2f::operator=(const float& setTo)
+{
+  x = setTo;
+  y = setTo;
+}
 Vector2f Vector2f::getNormal()
 {
   float length = getLength();

@@ -3,13 +3,19 @@
 #include <cfloat>
 #include "debug.h"
 
+
+PlayerCharacter::PlayerCharacter()
+{
+  Rotation = 0;
+}
+
 //NOTE: For some reason, sprite was calling its deconsructor after exiting the
 //      PlayerCharacter constructor.
 PlayerCharacter::PlayerCharacter(SDL_Renderer* renderer,
                                  std::string FileNamePath)
                                  :sprite(renderer, FileNamePath)
 {
-  centerPosition = Vector2f(10.0f,10.0f);
+  centerPosition = Vector2f(80.0f,80.0f);
   Velocity = Vector2f(0.0f, 0.0f);
   Rotation = 0;
   moveUpKey = KEY_NULL;
@@ -53,7 +59,7 @@ void PlayerCharacter::FixedUpdate(float dt, InputHandler* inputHandler)
     Rotation +=  rotationAmount * dt;
   }
 
-  float amount = 10.0f;
+  constexpr float accelerationAmount = 10.0f;
   Vector2f Acceleration = Vector2f(0.0f,0.0f);
 
   if(inputHandler->isKeyHeldDown(moveLeftKey)) {
@@ -70,23 +76,22 @@ void PlayerCharacter::FixedUpdate(float dt, InputHandler* inputHandler)
   }
 
   Acceleration.normalize();
-  Acceleration = Acceleration * (amount*dt);
+  Acceleration = Acceleration * (accelerationAmount*dt);
 
-  if(fabs(Acceleration.x + Acceleration.y) < FLT_EPSILON) {
-    if(fabs(Velocity.x) < .7f && fabs(Velocity.y) < .7f) {
+  if(fabs(Acceleration.x) < FLT_EPSILON && fabs(Acceleration.y) < FLT_EPSILON) {
+    if(fabs(Velocity.x) < .2f && fabs(Velocity.y) < .2f) {
       Velocity.x = 0.0f;
       Velocity.y = 0.0f;
     }
   }
+  constexpr float friction = 1.0f;
+  Velocity.x += -Velocity.x * friction*dt;
+  Velocity.y += -Velocity.y * friction*dt;
 
   Velocity = Velocity + Acceleration;
   this->centerPosition = this->centerPosition + Velocity;
 }
 
-void PlayerCharacter::Update(float dt, InputHandler* inputHandler)
-{
-  //do nothing
-}
 
 void PlayerCharacter::bindKeys(uint8_t keyLeft, uint8_t keyUp,
                                uint8_t keyRight, uint8_t keyDown,
@@ -178,7 +183,6 @@ void PlayerCharacter::panToIncludeInViewport(Viewport* viewport, int padding, fl
 Vector2f PlayerCharacter::getVelocity(){
     return this->Velocity;
 }
-
 Vector2f PlayerCharacter::getCenterPosition(){
     return this->centerPosition;
 }

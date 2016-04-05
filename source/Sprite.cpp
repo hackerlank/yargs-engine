@@ -49,16 +49,29 @@ Sprite::Sprite(SDL_Renderer* renderer, std::string FileNamePath,
   this->loadTexture(renderer, FileNamePath);
 }
 
-
 Sprite::~Sprite()
 {
   debug("Sprite Class: Destroyed Texture");
   SDL_DestroyTexture(Texture);
 }
 
+void Sprite::operator=(const Sprite& other)
+{
+  Texture = other.Texture;
+  TextureWidth = other.TextureWidth;
+  TextureHeight = other.TextureHeight;
+  ClippedRect.x = other.ClippedRect.x;
+  ClippedRect.y = other.ClippedRect.y;
+  ClippedRect.h = other.ClippedRect.h;
+  ClippedRect.w = other.ClippedRect.w;
+  DestRect.x = other.DestRect.x;
+  DestRect.y = other.DestRect.y;
+  DestRect.h = other.DestRect.h;
+  DestRect.w = other.DestRect.w;
+}
+
 void Sprite::draw(Viewport* viewport, int x, int y, double angle)
 {
-
   viewport->RenderToViewport(Texture, &ClippedRect, DestRect, angle, 0, SDL_FLIP_NONE, x, y);
 }
 

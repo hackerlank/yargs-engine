@@ -30,6 +30,8 @@ public:
   void draw(Viewport* viewport, int x, int y, double angle);
   void loadTexture(SDL_Renderer* renderer, std::string FileNamePath);
 
+  void operator=(const Sprite& other);
+
   int getTextureWidth();
   int getTextureHeight();
   int getWidth();

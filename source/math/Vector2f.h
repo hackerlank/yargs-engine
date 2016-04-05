@@ -14,6 +14,8 @@ struct Vector2f
   Vector2f operator*(const float scaleAmount);
   void operator*=(const float scaleAmount);
   void operator=(const Vector2f& other);
+  void operator=(const int& setTo);
+  void operator=(const float& setTo);
 
   Vector2f getNormal();
   float getLength();

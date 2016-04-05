@@ -29,7 +29,6 @@ void DrawFPS_Counter(FPS_Counter* fps_counter,
   drawText(fpsString, font, renderer, 10, 10);
   fps_counter->DisplayedFrames++;
   fps_counter->TimeSinceLastAverage += fps_counter->timer->TimeElapsed;
-
 }
 
 #endif

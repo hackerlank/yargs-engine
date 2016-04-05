@@ -8,9 +8,9 @@
 class GameObject
 {
 public:
-  virtual void Draw(Viewport* viewport, float interpolate) = 0;
-  virtual void FixedUpdate(float dt, InputHandler* inputHandler) = 0;
-  virtual void Update(float dt, InputHandler* inputHandler) = 0;
+  virtual void Draw(Viewport* viewport, float interpolate){};
+  virtual void FixedUpdate(const float dt, InputHandler* inputHandler){};
+  virtual void Update(const float dt, InputHandler* inputHandler){};
 
   virtual Vector2f getTopLeftCoords() = 0;
   virtual bool isInViewport(Viewport* viewport, int padding) = 0;
