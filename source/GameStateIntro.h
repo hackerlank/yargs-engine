@@ -18,14 +18,14 @@ private:
 
 public:
   GameStateIntro(std::stack<GameState*> *states, SDL_Renderer* renderer)
-                :background(renderer, getResourcePath("test.png"))
+                :background(renderer, getResourcePath("background.png"))
   {
     this->renderer = renderer;
     this->states = states;
   }
   ~GameStateIntro()
   {
-    
+
   }
   virtual void Draw(Viewport* viewport, const float extrapolate)
   {
@@ -33,7 +33,7 @@ public:
   }
   virtual void Update(const float dt, InputHandler* inputHandler, Viewport* viewport)
   {
-    if(inputHandler->isKeyHeldDown(KEY_Y)) {
+    if(inputHandler->isKeyHeldDown(KEY_SPACE)) {
       pushState(states, new GameStateMain(states, renderer));
     }
   }
