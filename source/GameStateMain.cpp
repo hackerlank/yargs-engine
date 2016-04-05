@@ -72,11 +72,10 @@ void GameStateMain::Update(const float dt, InputHandler* inputHandler, Viewport*
     viewport->ZoomIn(dt, -.2f);
   }
 
-  if(inputHandler->isKeyHeldDown(KEY_U)) {
+  if(inputHandler->isKeyHeldDown(KEY_Y)) {
     popState(states);
     return;
   }
-
 
   for(int object = 0; object < gameObjects.size(); object++) {
     gameObjects[object]->Update(dt, inputHandler);
