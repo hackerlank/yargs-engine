@@ -43,7 +43,13 @@ void Viewport::RenderToViewport(SDL_Texture* Texture, const SDL_Rect* srcRect,
   dstRect.y = yLocation - (int)ScreenY;
   dstRect.w *=  Zoom;
   dstRect.h *=  Zoom;
+
+  //Check if on screen
+  if(dstRect.x+dstRect.w < 0 || dstRect.x > ScreenWidth) return;
+  if(dstRect.y > ScreenHeight || dstRect.y+dstRect.h < 0) return;
+
   SDL_RenderCopyEx(Renderer, Texture, srcRect, &dstRect, angle, center, flip);
+
   #ifdef DEBUGDRAWVECTORS
   SDL_SetRenderDrawColor(Renderer, 255,255,0,255);
   SDL_RenderDrawRect(Renderer, &dstRect);

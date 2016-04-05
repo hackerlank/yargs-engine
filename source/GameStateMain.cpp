@@ -7,6 +7,7 @@
 //Temporary defines
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
+#define TRACKED_CHARACTER_PADDING 15
 
 #include "GameStateMain.h"
 
@@ -26,8 +27,6 @@ GameStateMain::GameStateMain(std::stack<GameState*> *states,
 
   player2.bindKeys(KEY_A, KEY_W, KEY_D, KEY_S, KEY_Q, KEY_E);
 
-  trackedCharacter = &player2;
-
   gameObjects.push_back(&player2);
   gameObjects.push_back(&player1);
 }
@@ -45,7 +44,10 @@ void GameStateMain::Draw(Viewport* viewport, const float extrapolate)
 		}
 	}
 
-	for(int object = 0; object < gameObjects.size(); object++) {
+  //TODO: This spot is temporary, need to move to Update()
+  player2.panToIncludeInViewport(viewport, TRACKED_CHARACTER_PADDING, extrapolate);
+
+  for(int object = 0; object < gameObjects.size(); object++) {
 		gameObjects[object]->Draw(viewport, extrapolate);
 	}
 
@@ -81,6 +83,8 @@ void GameStateMain::Update(const float dt, InputHandler* inputHandler, Viewport*
   for(int object = 0; object < gameObjects.size(); object++) {
     gameObjects[object]->Update(dt, inputHandler);
   }
+
+
 }
 
 void GameStateMain::FixedUpdate(const float dt, InputHandler* inputHandler)
@@ -88,9 +92,4 @@ void GameStateMain::FixedUpdate(const float dt, InputHandler* inputHandler)
   for(int object = 0; object < gameObjects.size(); object++) {
     gameObjects[object]->FixedUpdate(dt, inputHandler);
   }
-}
-
-PlayerCharacter* GameStateMain::getTrackedPlayer()
-{
-    return this->trackedCharacter;
 }

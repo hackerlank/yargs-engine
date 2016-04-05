@@ -15,7 +15,6 @@ public:
   virtual void Draw(Viewport* viewport, const float extrapolate) = 0;
   virtual void Update(const float dt, InputHandler* inputHandler, Viewport* viewport) = 0;
   virtual void FixedUpdate(const float dt, InputHandler* inputHandler) = 0;
-  virtual PlayerCharacter *getTrackedPlayer(){ return NULL;} //Return NULL by default
   virtual ~GameState() = 0;
 };
 

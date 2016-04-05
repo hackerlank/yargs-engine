@@ -57,9 +57,9 @@ public:
                          (int)y1 - (int)ScreenY,
                          (int)x1 - (int)ScreenX +(int)x2,
                          (int)y1 - (int)ScreenY +(int)y2);
-      SDL_Rect r = {  (int)x1 - (int)ScreenX +(int)x2 - 5, (int)y1 - (int)ScreenY +(int)y2 - 5, 10, 10 } ;
+      SDL_Rect r = { (int)x1 - (int)ScreenX +(int)x2 - 5,
+                     (int)y1 - (int)ScreenY +(int)y2 - 5, 10, 10 };
       SDL_RenderFillRect(Renderer, &r);
-
     }
     #endif
 };
