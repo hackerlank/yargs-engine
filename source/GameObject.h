@@ -8,9 +8,18 @@
 class GameObject
 {
 public:
-  virtual void Draw(Viewport* viewport, float interpolate) = 0;
-  virtual void FixedUpdate(float dt, InputHandler* inputHandler) = 0;
-  virtual void Update(float dt, InputHandler* inputHandler) = 0;
+  virtual void Draw(Viewport* viewport, const float extrapolate)
+  {
+    //do nothing
+  }
+  virtual void FixedUpdate(const float dt, InputHandler* inputHandler)
+  {
+    //do nothing
+  }
+  virtual void Update(const float dt, InputHandler* inputHandler)
+  {
+    //do nothing
+  }
 };
 
 #endif

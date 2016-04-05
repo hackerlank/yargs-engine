@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stack>
 
 #include "debug.h"
 
@@ -25,6 +26,10 @@
 #include "PlayerCharacter.h"
 #include "FPS_Counter.h"
 #include "Viewport.h"
+
+#include "GameState.h"
+#include "GameStateIntro.h"
+#include "GameStateManager.h"
 
 
 #define SCREEN_WIDTH 800
@@ -70,9 +75,11 @@ bool Initialize(SDL_Window* &Window, SDL_Renderer* &Renderer)
 
 
 
-
+//////////////Global//////////////
 SDL_Window* Window = 0;
 SDL_Renderer* Renderer = 0;
+
+std::stack<GameState*> states;
 
 InputHandler inputHandler;
 Viewport viewport;
@@ -81,11 +88,12 @@ std::vector<GameObject*> gameObjects;
 
 Timer timer = {0};
 
-Sprite* grass;
 TTF_Font *font;
 FPS_Counter fps_counter = {&timer, 0, 0, 0, 5, true};
 
 bool Running = true;
+/**********************************/
+
 
 int main(int argc, char* args[])
 {
@@ -97,24 +105,10 @@ int main(int argc, char* args[])
 	}
 	viewport = Viewport(Renderer, Window);
 
-	std::string resourcePath;
-	resourcePath = getResourcePath("fonts/consola.ttf");
-	font = loadFont(resourcePath, 18);
+  std::string resourcePath = getResourcePath("fonts/consola.ttf");
+  font = loadFont(resourcePath, 18);
 
-	resourcePath = getResourcePath("dirt.png");
-	grass = new Sprite(Renderer, resourcePath);
-
-	resourcePath = getResourcePath("blackline.png");
-	PlayerCharacter player1 = PlayerCharacter(Renderer, resourcePath);
-	player1.bindKeys(KEY_LEFT, KEY_UP, KEY_RIGHT, KEY_DOWN, KEY_Q, KEY_E);
-
-	resourcePath = getResourcePath("alienGreen.png");
-	PlayerCharacter player2 = PlayerCharacter(Renderer, resourcePath);
-	player2.bindKeys(KEY_A, KEY_W, KEY_D, KEY_S, KEY_Q, KEY_E);
-
-
-	gameObjects.push_back(&player2);
-	gameObjects.push_back(&player1);
+	pushState(&states, new GameStateIntro(&states, Renderer));
 
 	timer.MSPerUpdate = MS_PER_UPDATE;
 	updateTimer(&timer);
@@ -127,6 +121,10 @@ int main(int argc, char* args[])
 	}
 	#endif
 
+	while(!states.empty()) {
+		debug("Here");
+		popState(&states);
+	}
 	return 0;
 }
 
@@ -155,25 +153,7 @@ void GameLoop()
 
 
 	////////////////////////////Update/////////////////////////////
-	if(inputHandler.isKeyHeldDown(KEY_M)) {
-		viewport.PanLeft(timer.TimeElapsed, 600.0f);
-	}
-	if(inputHandler.isKeyHeldDown(KEY_K)) {
-		viewport.PanRight(timer.TimeElapsed, 600.0f);
-	}
-	if(inputHandler.isKeyHeldDown(KEY_J)) {
-		viewport.PanUp(timer.TimeElapsed, 600.0f);
-	}
-	if(inputHandler.isKeyHeldDown(KEY_N)) {
-		viewport.PanDown(timer.TimeElapsed, 600.0f);
-	}
-
-	if(inputHandler.isKeyHeldDown(KEY_I)) {
-		viewport.ZoomIn(timer.TimeElapsed, .2f);
-	}
-	if(inputHandler.isKeyHeldDown(KEY_O)) {
-		viewport.ZoomIn(timer.TimeElapsed, -.2f);
-	}
+	peekState(&states)->Update(timer.TimeElapsed, &inputHandler, &viewport);
 
 	if(inputHandler.isKeyHeldDown(KEY_F)) {
 		SDL_SetWindowFullscreen(Window, SDL_WINDOW_FULLSCREEN);
@@ -181,24 +161,17 @@ void GameLoop()
 	if(inputHandler.isKeyHeldDown(KEY_J)) {
 		SDL_SetWindowFullscreen(Window, 0);
 	}
-
-	for(int object = 0; object < gameObjects.size(); object++) {
-		gameObjects[object]->Update(timer.TimeElapsed, &inputHandler);
-	}
 	/**************************************************************/
 
 
 	//////////////////////////FixedUpdate/////////////////////////
 	int count = 0;
 	while(timer.accumulator >= timer.MSPerUpdate){
-
-		for(int object = 0; object < gameObjects.size(); object++) {
-			gameObjects[object]->FixedUpdate(timer.dt, &inputHandler);
-		}
+		peekState(&states)->FixedUpdate(timer.dt, &inputHandler);
 
 		SDL_PumpEvents();	//update keyboard state
 		timer.accumulator -= timer.MSPerUpdate;
-		if(count++ > 10) break;
+		if(count++ >= 10) break;
 	}
 	/************************************************************/
 
@@ -206,16 +179,7 @@ void GameLoop()
 	//////////////////////////Draw Code//////////////////////////
 	viewport.Clear(45, 120, 200, 255);
 
-	for(int i = 0; i <= SCREEN_WIDTH/grass->getTextureWidth(); i++) {
-		for(int j = 0; j <= SCREEN_HEIGHT/grass->getTextureHeight(); j++) {
-			grass->draw(&viewport, i*(grass->getWidth()), j*grass->getHeight(), 0);
-		}
-	}
-
-	for(int object = 0; object < gameObjects.size(); object++) {
-		gameObjects[object]->Draw(&viewport,
-															timer.accumulator/ (float) timer.MSPerUpdate);
-	}
+	peekState(&states)->Draw(&viewport, timer.dt);
 
 	char msCounter[200];
 	sprintf(msCounter, "%ums elapsed", timer.msElapsed);
@@ -224,6 +188,7 @@ void GameLoop()
 	DrawFPS_Counter(&fps_counter, font, Renderer);
 
 	viewport.Present();
+
 	/*************************************************************/
 
 }
