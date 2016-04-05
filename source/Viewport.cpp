@@ -44,6 +44,10 @@ void Viewport::RenderToViewport(SDL_Texture* Texture, const SDL_Rect* srcRect,
   dstRect.w *=  Zoom;
   dstRect.h *=  Zoom;
   SDL_RenderCopyEx(Renderer, Texture, srcRect, &dstRect, angle, center, flip);
+  #ifdef DEBUGDRAWVECTORS
+  SDL_SetRenderDrawColor(Renderer, 255,255,0,255);
+  SDL_RenderDrawRect(Renderer, &dstRect);
+  #endif
 }
 
 void Viewport::ZoomIn(float dt, float amount) {
@@ -69,4 +73,31 @@ void Viewport::PanDown(float dt, float amount)
 {
   ScreenY += amount*dt;
   CenterPosition.y += amount*dt;
+}
+
+int Viewport::getWidth()
+{
+    return this->ScreenWidth;
+}
+
+int Viewport::getHeight()
+{
+    return this->ScreenHeight;
+}
+
+void Viewport::panBy(float dx, float dy)
+{
+    ScreenX += dx;
+    ScreenY += dy;
+    CenterPosition = Vector2f((ScreenWidth+ScreenX)/2, (ScreenHeight+ScreenY));
+}
+
+Vector2f Viewport::getTopLeftCoords()
+{
+    return Vector2f(this->ScreenX, this->ScreenY);
+}
+Vector2f Viewport::getBottomRightCoords()
+{
+    return Vector2f(this->ScreenX + (float)this->ScreenWidth,
+                    this->ScreenY + (float)this->ScreenHeight);
 }

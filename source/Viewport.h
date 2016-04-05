@@ -41,15 +41,25 @@ public:
     void PanUp(float dt, float amount);
     void PanDown(float dt, float amount);
     void ZoomIn(float dt, float amount);
+    void panBy(float dx, float dy);
+
+    int getWidth();
+    int getHeight();
+
+    Vector2f getTopLeftCoords();
+    Vector2f getBottomRightCoords();
 
     #ifdef DEBUGDRAWVECTORS
-    void DrawDebugVector(int x1, int y1, int x2, int y2)
+    void DrawDebugVector(float x1, float y1, float x2, float y2)
     {
       SDL_SetRenderDrawColor(Renderer, 255,0,0,255);
-      SDL_RenderDrawLine(Renderer, x1 - CenterPosition.x + ScreenWidth/2,
-                         y1 - CenterPosition.y + ScreenHeight/2,
-                         x2 - CenterPosition.x + ScreenWidth/2,
-                         y2 - CenterPosition.y + ScreenHeight/2);
+      SDL_RenderDrawLine(Renderer, (int)x1 - (int)ScreenX,
+                         (int)y1 - (int)ScreenY,
+                         (int)x1 - (int)ScreenX +(int)x2,
+                         (int)y1 - (int)ScreenY +(int)y2);
+      SDL_Rect r = {  (int)x1 - (int)ScreenX +(int)x2 - 5, (int)y1 - (int)ScreenY +(int)y2 - 5, 10, 10 } ;
+      SDL_RenderFillRect(Renderer, &r);
+
     }
     #endif
 };

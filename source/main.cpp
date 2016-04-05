@@ -31,6 +31,7 @@
 #define SCREEN_HEIGHT 600
 #define WINDOW_TITLE "Hello World"
 #define MS_PER_UPDATE 16					//Our target ms per update, 16 is about 60fps
+#define TRACKED_CHARACTER_PADDING 15
 
 void GameLoop();
 
@@ -78,6 +79,7 @@ InputHandler inputHandler;
 Viewport viewport;
 
 std::vector<GameObject*> gameObjects;
+GameObject* trackedCharacter = NULL;
 
 Timer timer = {0};
 
@@ -112,6 +114,7 @@ int main(int argc, char* args[])
 	PlayerCharacter player2 = PlayerCharacter(Renderer, resourcePath);
 	player2.bindKeys(KEY_A, KEY_W, KEY_D, KEY_S, KEY_Q, KEY_E);
 
+	trackedCharacter = &player2;
 
 	gameObjects.push_back(&player2);
 	gameObjects.push_back(&player1);
@@ -205,6 +208,10 @@ void GameLoop()
 
 	//////////////////////////Draw Code//////////////////////////
 	viewport.Clear(45, 120, 200, 255);
+	//Keep tracked object in viewport
+	if(trackedCharacter != NULL){
+		trackedCharacter->panToIncludeInViewport(&viewport, TRACKED_CHARACTER_PADDING, timer.accumulator/ (float) timer.MSPerUpdate);
+	}
 
 	for(int i = 0; i <= SCREEN_WIDTH/grass->getTextureWidth(); i++) {
 		for(int j = 0; j <= SCREEN_HEIGHT/grass->getTextureHeight(); j++) {

@@ -12,7 +12,7 @@ class PlayerCharacter : public virtual GameObject
 {
 private:
   Sprite sprite;
-  Vector2f Position;
+  Vector2f centerPosition;
   Vector2f Velocity;
   double Rotation;
 
@@ -25,9 +25,13 @@ public:
                 uint8_t keyRight, uint8_t keyDown,
                 uint8_t rotateLeftKey, uint8_t rotateRightKey);
 
+  Vector2f getTopLeftCoords();
+  bool isInViewport(Viewport* viewport, int padding);
+  void panToIncludeInViewport(Viewport* viewport, int padding, float extrapolate);
+
   #ifdef DEBUG
   Vector2f getVelocity();
-  Vector2f getPosition();
+  Vector2f getCenterPosition();
   #endif
 
   uint8_t moveLeftKey;
