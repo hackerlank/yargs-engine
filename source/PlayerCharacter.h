@@ -17,10 +17,10 @@ private:
   double Rotation;
 
 public:
+  PlayerCharacter();
   PlayerCharacter(SDL_Renderer* renderer, std::string FileNamePath);
   void Draw(Viewport* viewport, float interpolate);
   void FixedUpdate(float dt, InputHandler* inputHandler);
-  void Update(float dt, InputHandler* inputHandler);
   void bindKeys(uint8_t keyLeft, uint8_t keyUp,
                 uint8_t keyRight, uint8_t keyDown,
                 uint8_t rotateLeftKey, uint8_t rotateRightKey);

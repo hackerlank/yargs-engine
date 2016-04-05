@@ -1,7 +1,7 @@
 CC = clang++
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 
-CFLAGS = -Wall -Wfloat-equal -c -D DEBUG -D DEBUGDRAWVECTORS -O2
+CFLAGS = -Wall -Wfloat-equal -c -D DEBUG -D DEBUGDRAWVECTORS -O2 -std=c++11
 
 MORECFLAGS = #-Wextra -Wunreachable-code
 
@@ -10,7 +10,7 @@ EXECUTABLE = Game
 BUILDDIR = ../build
 
 SOURCES = main.o Utility.o Sprite.o Vector2f.o InputHandler.o Command.o \
-PlayerCharacter.o Viewport.o
+PlayerCharacter.o Viewport.o GameStateMain.o GameStateManager.o GameState.o
 
 # $< is the name of the first prereq
 # $@ is the name of the target of the rule
@@ -23,6 +23,15 @@ $(EXECUTABLE): $(SOURCES)
 	$(CC) $(LDFLAGS) $^ -o $(EXECUTABLE)
 
 main.o: main.cpp
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
+
+GameStateMain.o: GameStateMain.cpp
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
+
+GameStateManager.o: GameStateManager.cpp
+	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
+
+GameState.o: GameState.cpp
 	$(CC) $(CFLAGS) $(MORECFLAGS) $< -o $@
 
 PlayerCharacter.o: PlayerCharacter.cpp
