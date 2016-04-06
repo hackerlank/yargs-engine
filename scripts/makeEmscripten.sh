@@ -7,7 +7,7 @@ cd "$DIR"
 cd ..
 
 #Activate "emscripten"
-
+./
 # source Emscripten
 
 #Make temporary dir
