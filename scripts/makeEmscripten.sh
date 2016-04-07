@@ -18,10 +18,12 @@ source "$EMSCRDIR/emsdk_env.sh"
 directory=/tmp/$RANDOM-$$-emscripten
 mkdir $directory
 
+echo "TEMPORARY DIRECTORY: $directory"
+
 # copy source in /tmp/<random-dir>
 cp -r "source/" "$directory"
 # copy assets in /tmp/<random-dir>
-cp -r "assets/" "$directory"
+cp -r "assets" "$directory"
 
 #cd to tmp dir
 cd "$directory"
