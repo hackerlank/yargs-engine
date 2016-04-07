@@ -28,6 +28,6 @@
 *.app
 
 # Misc.
-*.txt
+Notes.txt
 .DS_STORE
 frog.png
