@@ -1,3 +1,3 @@
-export PATH="/Users/Yuriy/Desktop/SDL_Game/EmscriptenSDK/emsdk_portable:/Users/Yuriy/Desktop/SDL_Game/EmscriptenSDK/emsdk_portable/clang/e1.35.0_64bit:/Users/Yuriy/Desktop/SDL_Game/EmscriptenSDK/emsdk_portable/node/4.1.1_64bit/bin:/Users/Yuriy/Desktop/SDL_Game/EmscriptenSDK/emsdk_portable/emscripten/1.35.0:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-export EM_CONFIG="/Users/Yuriy/.emscripten"
-export EMSCRIPTEN="/Users/Yuriy/Desktop/SDL_Game/EmscriptenSDK/emsdk_portable/emscripten/1.35.0"
+export PATH="/Users/marios/Mobile/Github/yuriy-gaming-enging/yargs-engine/EmscriptenSDK:/Users/marios/Mobile/Github/yuriy-gaming-enging/yargs-engine/EmscriptenSDK/clang/e1.35.0_64bit:/Users/marios/Mobile/Github/yuriy-gaming-enging/yargs-engine/EmscriptenSDK/node/4.1.1_64bit/bin:/Users/marios/Mobile/Github/yuriy-gaming-enging/yargs-engine/EmscriptenSDK/emscripten/1.35.0:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+export EM_CONFIG="/Users/marios/.emscripten"
+export EMSCRIPTEN="/Users/marios/Mobile/Github/yuriy-gaming-enging/yargs-engine/EmscriptenSDK/emscripten/1.35.0"
