@@ -13,7 +13,7 @@ Viewport::Viewport(SDL_Renderer* Renderer, SDL_Window* Window)
   ScreenY = 0.0f;
   SDL_GetWindowSize(Window, &ScreenWidth, &ScreenHeight);
   CenterPosition = Vector2f(ScreenWidth/2, ScreenHeight/2);
-  Zoom = 1.0f;
+  zoomFactor = 0.5f;
 }
 Viewport::~Viewport()
 {
@@ -41,8 +41,10 @@ void Viewport::RenderToViewport(SDL_Texture* Texture, const SDL_Rect* srcRect,
 {
   dstRect.x = xLocation - (int)ScreenX;
   dstRect.y = yLocation - (int)ScreenY;
-  dstRect.w *=  Zoom;
-  dstRect.h *=  Zoom;
+  dstRect.x *= zoomFactor;
+  dstRect.y *= zoomFactor;
+  dstRect.w *=  zoomFactor;
+  dstRect.h *=  zoomFactor;
 
   //Check if on screen
   if(dstRect.x+dstRect.w < 0 || dstRect.x > ScreenWidth) return;
@@ -55,9 +57,30 @@ void Viewport::RenderToViewport(SDL_Texture* Texture, const SDL_Rect* srcRect,
   SDL_RenderDrawRect(Renderer, &dstRect);
   #endif
 }
-
-void Viewport::ZoomIn(float dt, float amount) {
-  Zoom += dt*amount;
+#ifdef DEBUGDRAWVECTORS
+void Viewport::DrawDebugVector(float x1, float y1, float x2, float y2)
+{
+  SDL_SetRenderDrawColor(Renderer, 255,0,0,255);
+  SDL_RenderDrawLine(Renderer, (int)((x1-ScreenX)*zoomFactor),
+                               (int)((y1-ScreenY)*zoomFactor),
+                               (int)((x1-ScreenX+x2)*zoomFactor),
+                               (int)((y1-ScreenY+y2)*zoomFactor)
+                    );
+  SDL_Rect r = { (int)((x1-ScreenX+x2-5)*zoomFactor),
+                 (int)((y1-ScreenY+y2-5)*zoomFactor), 10, 10 };
+  SDL_RenderFillRect(Renderer, &r);
+}
+#endif
+void Viewport::zoomBy(float dt, float amount) {
+  if((zoomFactor + dt*amount) >= ZOOM_MIN && (zoomFactor + dt*amount) <= ZOOM_MAX ){
+      zoomFactor += dt*amount;
+  }else{
+      if(zoomFactor + dt*amount < ZOOM_MIN){
+          zoomFactor = ZOOM_MIN;
+      }else{
+          zoomFactor = ZOOM_MAX;
+      }
+  }
 }
 
 void Viewport::PanLeft(float dt, float amount)
@@ -79,6 +102,19 @@ void Viewport::PanDown(float dt, float amount)
 {
   ScreenY += amount*dt;
   CenterPosition.y += amount*dt;
+}
+
+float Viewport::getZoomFactor(){
+    return this->zoomFactor;
+}
+
+void Viewport::setScreenCoords(int x, int y){
+    this->ScreenX = x;
+    this->ScreenY = y;
+}
+
+void Viewport::setZoomFactor(float z){
+    this->zoomFactor = z;
 }
 
 int Viewport::getWidth()
@@ -106,4 +142,8 @@ Vector2f Viewport::getBottomRightCoords()
 {
     return Vector2f(this->ScreenX + (float)this->ScreenWidth,
                     this->ScreenY + (float)this->ScreenHeight);
+}
+
+SDL_Renderer *Viewport::getRenderer(){
+    return this->Renderer;
 }

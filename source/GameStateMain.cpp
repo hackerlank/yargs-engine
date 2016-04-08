@@ -16,12 +16,15 @@
 #include <string>
 
 GameStateMain::GameStateMain(std::stack<GameState*> *states,
-                             SDL_Renderer* Renderer)
-                            :grass(Renderer, getResourcePath("dirt.png")),
-                            player1(Renderer, getResourcePath("blackline.png")),
-                            player2(Renderer, getResourcePath("alienGreen.png"))
+                             Viewport *viewport)
+                            : GameState(viewport), grass(viewport->getRenderer(), getResourcePath("dirt.png")),
+                            player1(viewport->getRenderer(), getResourcePath("blackline.png")),
+                            player2(viewport->getRenderer(), getResourcePath("alienGreen.png"))
 {
   this->states = states;
+  this->zoomFactor = 0.5f;
+  this->screenX = 0;
+  this->screenY = 0;
   std::string resourcePath;
 
 
@@ -35,25 +38,25 @@ GameStateMain::~GameStateMain()
 
 }
 
-void GameStateMain::Draw(Viewport* viewport, const float extrapolate)
+void GameStateMain::Draw(const float extrapolate)
 {
 
 	for(int i = 0; i <= SCREEN_WIDTH/grass.getTextureWidth(); i++) {
 		for(int j = 0; j <= SCREEN_HEIGHT/grass.getTextureHeight(); j++) {
-			grass.draw(viewport, i*(grass.getWidth()), j*grass.getHeight(), 0);
+			grass.draw(this->viewport, i*(grass.getWidth()), j*grass.getHeight(), 0);
 		}
 	}
 
   //TODO: This spot is temporary, need to move to Update()
-  player2.panToIncludeInViewport(viewport, TRACKED_CHARACTER_PADDING, extrapolate);
+  player2.panToIncludeInViewport(this->viewport, TRACKED_CHARACTER_PADDING, extrapolate);
 
   for(int object = 0; object < gameObjects.size(); object++) {
 		gameObjects[object]->Draw(viewport, extrapolate);
-	}
+    }
 
 }
 
-void GameStateMain::Update(const float dt, InputHandler* inputHandler, Viewport* viewport)
+void GameStateMain::Update(const float dt, InputHandler* inputHandler)
 {
   if(inputHandler->isKeyHeldDown(KEY_LEFT)) {
     viewport->PanLeft(dt, 600.0f);
@@ -69,10 +72,10 @@ void GameStateMain::Update(const float dt, InputHandler* inputHandler, Viewport*
   }
 
   if(inputHandler->isKeyHeldDown(KEY_I)) {
-    viewport->ZoomIn(dt, .2f);
+    viewport->zoomBy(dt, .2f);
   }
   if(inputHandler->isKeyHeldDown(KEY_O)) {
-    viewport->ZoomIn(dt, -.2f);
+    viewport->zoomBy(dt, -.2f);
   }
 
   if(inputHandler->isKeyHeldDown(KEY_Y)) {
@@ -83,8 +86,6 @@ void GameStateMain::Update(const float dt, InputHandler* inputHandler, Viewport*
   for(int object = 0; object < gameObjects.size(); object++) {
     gameObjects[object]->Update(dt, inputHandler);
   }
-
-
 }
 
 void GameStateMain::FixedUpdate(const float dt, InputHandler* inputHandler)
@@ -92,4 +93,16 @@ void GameStateMain::FixedUpdate(const float dt, InputHandler* inputHandler)
   for(int object = 0; object < gameObjects.size(); object++) {
     gameObjects[object]->FixedUpdate(dt, inputHandler);
   }
+}
+
+void GameStateMain::onResume(){
+    this->viewport->setZoomFactor(this->zoomFactor);
+    this->viewport->setScreenCoords(this->screenX,this->screenY);
+}
+
+void GameStateMain::onLeave(){
+    //Keep track of our latest
+    Vector2f sTL = viewport->getTopLeftCoords();
+    this->screenX = sTL.x;
+    this->screenY = sTL.y;
 }

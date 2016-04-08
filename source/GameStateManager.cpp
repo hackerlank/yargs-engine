@@ -5,6 +5,7 @@
 void pushState(std::stack<GameState*> *states, GameState* state)
 {
   states->push(state);
+  states->top()->onResume();
 }
 
 
@@ -12,8 +13,12 @@ void pushState(std::stack<GameState*> *states, GameState* state)
 //             return afterwards.
 void popState(std::stack<GameState*> *states)
 {
+  states->top()->onLeave();
   delete states->top();
   states->pop();
+  if(!states->empty()){
+      states->top()->onResume();
+  }
 }
 
 void changeState(std::stack<GameState*> *states, GameState* state)
