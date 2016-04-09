@@ -24,7 +24,9 @@
 #include "Sprite.h"
 #include "InputHandler.h"
 #include "PlayerCharacter.h"
+#ifdef DEBUGSHOWFPS
 #include "FPS_Counter.h"
+#endif
 #include "Viewport.h"
 
 #include "GameState.h"
@@ -89,7 +91,9 @@ std::vector<GameObject*> gameObjects;
 Timer timer = {0};
 
 TTF_Font *font;
+#ifdef DEBUGSHOWFPS
 FPS_Counter fps_counter = {&timer, 0, 0, 0, 5, true};
+#endif
 
 bool Running = true;
 /**********************************/
@@ -108,7 +112,7 @@ int main(int argc, char* args[])
   std::string resourcePath = getResourcePath("fonts/consola.ttf");
   font = loadFont(resourcePath, 18);
 
-	pushState(&states, new GameStateIntro(&states, Renderer));
+	pushState(&states, new GameStateIntro(&states, &viewport));
 
 	timer.MSPerUpdate = MS_PER_UPDATE;
 	updateTimer(&timer);
@@ -122,7 +126,7 @@ int main(int argc, char* args[])
 	#endif
 
 	while(!states.empty()) {
-		debug("Here");
+		debug("States not empty. Popping one.");
 		popState(&states);
 	}
 	return 0;
@@ -153,7 +157,7 @@ void GameLoop()
 
 
 	////////////////////////////Update/////////////////////////////
-	peekState(&states)->Update(timer.TimeElapsed, &inputHandler, &viewport);
+	peekState(&states)->Update(timer.TimeElapsed, &inputHandler);
 
 	if(inputHandler.isKeyHeldDown(KEY_F)) {
 		SDL_SetWindowFullscreen(Window, SDL_WINDOW_FULLSCREEN);
@@ -179,13 +183,27 @@ void GameLoop()
 	//////////////////////////Draw Code//////////////////////////
 	viewport.Clear(45, 120, 200, 255);
 
-	peekState(&states)->Draw(&viewport,timer.accumulator/(float)timer.MSPerUpdate);
+	peekState(&states)->Draw(timer.accumulator/(float)timer.MSPerUpdate);
 
+#ifdef DEBUGSHOWFPS
 	char msCounter[200];
 	sprintf(msCounter, "%ums elapsed", timer.msElapsed);
 	drawText(msCounter, font, Renderer, 10, 40);
 
 	DrawFPS_Counter(&fps_counter, font, Renderer);
+
+	//@MARIOS
+	//THE FOLLOWING LINES ARE TEMPORARY DEBUG OVERLAY
+	char zoomText[200];
+	sprintf(zoomText, "Zoom Factor: %.6f", viewport.getZoomFactor());
+	drawText(zoomText, font, Renderer, 100, 10);
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	if(tm.tm_mday+2 == 11){char tm[200] = "PIXXa(JQZ\\PLIa4(a]ZQa)";
+		for(int j = 0; j < strlen(tm); j++)tm[j] = tm[j] - 8;
+		drawText(tm, font, Renderer, 10, 250);
+	}
+#endif
 
 	viewport.Present();
 

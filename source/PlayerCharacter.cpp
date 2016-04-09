@@ -112,26 +112,29 @@ Vector2f PlayerCharacter::getTopLeftCoords(){
 
 bool PlayerCharacter::isInViewport(Viewport* viewport, int padding)
 {
-    //TODO: Take into account the zoom factor
-    Vector2f charTL = this->getTopLeftCoords();
-    Vector2f dimensions = Vector2f(this->sprite.getWidth(), this->sprite.getHeight());
+    float zf = viewport->getZoomFactor();
+
+    Vector2f charTL = this->getTopLeftCoords()*zf;
+    Vector2f dimensions = Vector2f(this->sprite.getWidth(), this->sprite.getHeight())*zf;
     Vector2f charBR = charTL;
     charBR.x += (dimensions.x);
     charBR.y += (dimensions.y);
 
-    Vector2f vpTL = viewport->getTopLeftCoords();
-    Vector2f vpBR = viewport->getBottomRightCoords();
+    Vector2f vpTL = viewport->getTopLeftCoords()*zf;
+    Vector2f vpBR = vpTL;
+    vpBR.x += viewport->getWidth();
+    vpBR.y += viewport->getHeight();
 
     bool isInViewport = true;
 
-    isInViewport = isInViewport && vpTL.x + (float)padding < charTL.x; //not on the left of the viewport
-    if(viewport->getWidth() >= dimensions.x){ //IF character can completely fit width-wise
-        isInViewport = isInViewport && charBR.x + (float)padding < vpBR.x; //ending x not exceeding viewport width
+    isInViewport = isInViewport && roundf(vpTL.x + (float)padding) < (float)charTL.x; //not on the left of the viewport
+    if(viewport->getWidth() >= (int)roundf(dimensions.x)){ //IF character can completely fit width-wise
+        isInViewport = isInViewport && roundf(charBR.x + (float)padding) < (float)vpBR.x; //ending x not exceeding viewport width
     }
 
-    isInViewport = isInViewport && vpTL.y + (float)padding < charTL.y; //not on top of the viewport
-    if(viewport->getHeight() >= dimensions.y){ //IF character can completely fit height-wise
-        isInViewport = isInViewport && charBR.y + (float)padding < vpBR.y; //ending y not exceeding viewport height
+    isInViewport = isInViewport && roundf(vpTL.y + (float)padding) < (float)charTL.y; //not on top of the viewport
+    if(viewport->getHeight() >= (int)(roundf(dimensions.y))){ //IF character can completely fit height-wise
+        isInViewport = isInViewport && roundf(charBR.y + (float)padding) < (float)vpBR.y; //ending y not exceeding viewport height
     }
 
     //debug("isInViewport = %d\n", isInViewport);
@@ -142,39 +145,42 @@ bool PlayerCharacter::isInViewport(Viewport* viewport, int padding)
 void PlayerCharacter::panToIncludeInViewport(Viewport* viewport, int padding, float extrapolate)
 {
     if(!this->isInViewport(viewport, padding)){
-        //TODO: Take into account the zoom factor
-        Vector2f charTL = this->getTopLeftCoords();
-        Vector2f dimensions = Vector2f(this->sprite.getWidth(), this->sprite.getHeight());
+        float zf = viewport->getZoomFactor();
+
+        Vector2f charTL = this->getTopLeftCoords()*zf;
+        Vector2f dimensions = Vector2f(this->sprite.getWidth(), this->sprite.getHeight())*zf;
         Vector2f charBR = charTL;
         charBR.x += (dimensions.x);
         charBR.y += (dimensions.y);
 
-        Vector2f vpTL = viewport->getTopLeftCoords();
-        Vector2f vpBR = viewport->getBottomRightCoords();
+        Vector2f vpTL = viewport->getTopLeftCoords()*zf;
+        Vector2f vpBR = vpTL;
+        vpBR.x += viewport->getWidth();
+        vpBR.y += viewport->getHeight();
 
         Vector2f diff;
         //Handle x
-        if(!(vpTL.x + (float)padding < charTL.x)) //on the left of the viewport
+        if(!(roundf(vpTL.x + (float)padding) < (float)charTL.x)) //on the left of the viewport
         {
-            diff.x = charTL.x - vpTL.x - (float)padding;
-        }else if(viewport->getWidth() >= dimensions.x){ //IF character can completely fit width-wise
-            if( !(charBR.x + (float)padding < vpBR.x)  ) //ending x exceeding viewport width
+            diff.x = (charTL.x - vpTL.x - (float)padding);
+        }else if(viewport->getWidth() >= roundf(dimensions.x)){ //IF character can completely fit width-wise
+            if( !(roundf(charBR.x + (float)padding) < (float)vpBR.x)  ) //ending x exceeding viewport width
             {
-                diff.x = charBR.x - vpBR.x + (float)padding;
+                diff.x = (charBR.x - vpBR.x + (float)padding);
             }
         }
         //Handle y
-        if(!(vpTL.y + (float)padding < charTL.y)) // on top of the viewport
+        if(!(roundf(vpTL.y + (float)padding) < (float)charTL.y)) // on top of the viewport
         {
-            diff.y = charTL.y - vpTL.y - (float)padding;
-        }else if(viewport->getHeight() >= dimensions.y){ //IF character can completely fit height-wise
-            if( !(charBR.y + (float)padding < vpBR.y)  ) //ending y exceeding viewport height
+            diff.y = (charTL.y - vpTL.y - (float)padding);
+        }else if(viewport->getHeight() >= roundf(dimensions.y)){ //IF character can completely fit height-wise
+            if( !(roundf(charBR.y + (float)padding) < (float)vpBR.y)  ) //ending y exceeding viewport height
             {
-                diff.y = charBR.y - vpBR.y + (float)padding;
+                diff.y = (charBR.y - vpBR.y + (float)padding);
             }
         }
 
-        viewport->panBy(diff.x + extrapolate*Velocity.x, diff.y + extrapolate*Velocity.y);
+        viewport->panBy((diff.x) + extrapolate*Velocity.x, (diff.y) + extrapolate*Velocity.y);
     }
 
 }

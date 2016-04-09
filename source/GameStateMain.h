@@ -16,13 +16,17 @@ private:
   PlayerCharacter player1;
   PlayerCharacter player2;
   Sprite grass;
+  int screenX, screenY;
+  float zoomFactor;
 
 public:
-  GameStateMain(std::stack<GameState*> *states, SDL_Renderer* Renderer);
+  GameStateMain(std::stack<GameState*> *states, Viewport* viewport);
   ~GameStateMain();
-  virtual void Draw(Viewport* viewport, const float extrapolate);
-  virtual void Update(const float dt, InputHandler* inputHandler, Viewport* viewport);
-  virtual void FixedUpdate(const float dt, InputHandler* inputHandler);
+  void Draw(const float extrapolate);
+  void Update(const float dt, InputHandler* inputHandler);
+  void FixedUpdate(const float dt, InputHandler* inputHandler);
+  void onResume();
+  void onLeave();
 
 };
 

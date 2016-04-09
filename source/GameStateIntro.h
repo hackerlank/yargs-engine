@@ -14,32 +14,41 @@ class GameStateIntro : public GameState
 {
 private:
   Sprite background;
-  SDL_Renderer* renderer;
 
 public:
-  GameStateIntro(std::stack<GameState*> *states, SDL_Renderer* renderer)
-                :background(renderer, getResourcePath("background.png"))
+  GameStateIntro(std::stack<GameState*> *states, Viewport* viewport)
+                : GameState(viewport), background(viewport->getRenderer(), getResourcePath("background.png"))
   {
-    this->renderer = renderer;
     this->states = states;
   }
   ~GameStateIntro()
   {
 
   }
-  virtual void Draw(Viewport* viewport, const float extrapolate)
+  void Draw(const float extrapolate)
   {
     background.draw(viewport, 0, 0, 0);
   }
-  virtual void Update(const float dt, InputHandler* inputHandler, Viewport* viewport)
+  void Update(const float dt, InputHandler* inputHandler)
   {
     if(inputHandler->isKeyHeldDown(KEY_SPACE)) {
-      pushState(states, new GameStateMain(states, renderer));
+      pushState(states, new GameStateMain(states, viewport));
     }
   }
-  virtual void FixedUpdate(const float dt, InputHandler* inputHandler)
+  void FixedUpdate(const float dt, InputHandler* inputHandler)
   {
 
+  }
+
+  void onResume()
+  {
+    this->viewport->setZoomFactor(1.0f);
+    this->viewport->setScreenCoords(0,0);
+  }
+
+  void onLeave()
+  {
+      //Nothing required for this
   }
 
 };

@@ -12,6 +12,9 @@
 #include "math/Vector2f.h"
 #include "debug.h"
 
+#define ZOOM_MAX 1.0f
+#define ZOOM_MIN 0.1f
+
 class Viewport
 {
 private:
@@ -20,7 +23,7 @@ private:
   float ScreenY;
   int ScreenWidth;
   int ScreenHeight;
-  float Zoom;
+  float zoomFactor;
 //  uint8_t moveLeftKey, moveRightKey, moveUpKey, moveDownKey;
   SDL_Renderer* Renderer;
   SDL_Window* Window;
@@ -40,28 +43,25 @@ public:
     void PanRight(float dt, float amount);
     void PanUp(float dt, float amount);
     void PanDown(float dt, float amount);
-    void ZoomIn(float dt, float amount);
+    void zoomBy(float dt, float amount);
+    void setZoomFactor(float z);
+    void setScreenCoords(int x, int y);
     void panBy(float dx, float dy);
+
+    SDL_Renderer *getRenderer();
 
     int getWidth();
     int getHeight();
+
+    float getZoomFactor();
 
     Vector2f getTopLeftCoords();
     Vector2f getBottomRightCoords();
 
     #ifdef DEBUGDRAWVECTORS
-    void DrawDebugVector(float x1, float y1, float x2, float y2)
-    {
-      SDL_SetRenderDrawColor(Renderer, 255,0,0,255);
-      SDL_RenderDrawLine(Renderer, (int)x1 - (int)ScreenX,
-                         (int)y1 - (int)ScreenY,
-                         (int)x1 - (int)ScreenX +(int)x2,
-                         (int)y1 - (int)ScreenY +(int)y2);
-      SDL_Rect r = { (int)x1 - (int)ScreenX +(int)x2 - 5,
-                     (int)y1 - (int)ScreenY +(int)y2 - 5, 10, 10 };
-      SDL_RenderFillRect(Renderer, &r);
-    }
+    void DrawDebugVector(float x1, float y1, float x2, float y2);
     #endif
+
 };
 
 #endif

@@ -20,6 +20,7 @@ Sprite::Sprite()
 Sprite::Sprite(SDL_Renderer* renderer, std::string FileNamePath)
 {
   Texture = 0;  //intialize to null
+  debug("Loading texture %s with renderer at %u", FileNamePath.c_str(), renderer);
   this->loadTexture(renderer, FileNamePath);
 
   //NOTE(yuriy): By default, ClippedRect will draw the entire Texture
@@ -72,6 +73,7 @@ void Sprite::operator=(const Sprite& other)
 
 void Sprite::draw(Viewport* viewport, int x, int y, double angle)
 {
+  //debug("Rendering to viewport %u", viewport);
   viewport->RenderToViewport(Texture, &ClippedRect, DestRect, angle, 0, SDL_FLIP_NONE, x, y);
 }
 

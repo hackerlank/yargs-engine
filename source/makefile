@@ -1,7 +1,12 @@
 CC = clang++
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 
-CFLAGS = -Wall -Wfloat-equal -c -D DEBUG -D DEBUGDRAWVECTORS -O2 -std=c++11
+#Available Debug Flags:
+# DEBUG
+# DEBUGDRAWVECTORS
+# DEBUGSHOWFPS
+
+CFLAGS = -Wall -Wfloat-equal -c -D DEBUG -D DEBUGDRAWVECTORS -D DEBUGSHOWFPS -O2 -std=c++11
 
 #Will be replaced
 MORECFLAGS = #-Wextra -Wunreachable-code
