@@ -24,6 +24,7 @@
 #include "Sprite.h"
 #include "InputHandler.h"
 #include "PlayerCharacter.h"
+#include "SoundManager.h"
 #ifdef DEBUGSHOWFPS
 #include "FPS_Counter.h"
 #endif
@@ -43,7 +44,7 @@ void GameLoop();
 
 bool Initialize(SDL_Window* &Window, SDL_Renderer* &Renderer)
 {
-	if (SDL_Init(SDL_INIT_VIDEO) != 0){
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0){
 		debugSDL();
 		return false;
 	}
@@ -70,6 +71,10 @@ bool Initialize(SDL_Window* &Window, SDL_Renderer* &Renderer)
 		debugSDL();
 		return false;
 	}
+    if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) != 0 ){
+       debugSDL();
+       return false;
+    }
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 	//SDL_RenderSetLogicalSize(Renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 	return true;
@@ -85,6 +90,7 @@ std::stack<GameState*> states;
 
 InputHandler inputHandler;
 Viewport viewport;
+SoundManager soundManager;
 
 std::vector<GameObject*> gameObjects;
 
@@ -108,6 +114,10 @@ int main(int argc, char* args[])
 		return 1;
 	}
 	viewport = Viewport(Renderer, Window);
+    soundManager = SoundManager();
+/*audio* SoundManager::addAudioClip(int fileType, string audioPath, int channel
+                                , uint32_t startTime, int repeats, float volumePerc){*/
+    soundManager.addAudioClip(AUDIO_TYPE_WAV, getResourcePath("audio/bd.wav"), CHANNEL_FX, 0, 2, 1.0f);
 
   std::string resourcePath = getResourcePath("fonts/consola.ttf");
   font = loadFont(resourcePath, 18);
@@ -179,6 +189,8 @@ void GameLoop()
 	}
 	/************************************************************/
 
+    //////////////////////////Sound Code//////////////////////////
+    soundManager.onTick(timer.CurrentTime);
 
 	//////////////////////////Draw Code//////////////////////////
 	viewport.Clear(45, 120, 200, 255);
@@ -192,17 +204,10 @@ void GameLoop()
 
 	DrawFPS_Counter(&fps_counter, font, Renderer);
 
-	//@MARIOS
 	//THE FOLLOWING LINES ARE TEMPORARY DEBUG OVERLAY
 	char zoomText[200];
 	sprintf(zoomText, "Zoom Factor: %.6f", viewport.getZoomFactor());
 	drawText(zoomText, font, Renderer, 100, 10);
-	time_t t = time(NULL);
-	struct tm tm = *localtime(&t);
-	if(tm.tm_mday+2 == 11){char tm[200] = "PIXXa(JQZ\\PLIa4(a]ZQa)";
-		for(int j = 0; j < strlen(tm); j++)tm[j] = tm[j] - 8;
-		drawText(tm, font, Renderer, 10, 250);
-	}
 #endif
 
 	viewport.Present();

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <SDL2/SDL.h>
 
-struct Timer {
+typedef struct{
   float TimeElapsed;      //since last frame (in seconds) Used for Update()
   uint32_t OldTime;
   uint32_t CurrentTime;
@@ -12,7 +12,7 @@ struct Timer {
   uint32_t accumulator;
   float dt;             //multiply times movement to get pixels per second
   uint8_t MSPerUpdate;  //TODO: decide on whether this can be changed live
-};
+} Timer;
 
 void updateTimer(Timer* timer)
 {
