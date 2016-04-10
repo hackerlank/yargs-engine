@@ -204,17 +204,10 @@ void GameLoop()
 
 	DrawFPS_Counter(&fps_counter, font, Renderer);
 
-	//@MARIOS
 	//THE FOLLOWING LINES ARE TEMPORARY DEBUG OVERLAY
 	char zoomText[200];
 	sprintf(zoomText, "Zoom Factor: %.6f", viewport.getZoomFactor());
 	drawText(zoomText, font, Renderer, 100, 10);
-	time_t t = time(NULL);
-	struct tm tm = *localtime(&t);
-	if(tm.tm_mday+2 == 11){char tm[200] = "PIXXa(JQZ\\PLIa4(a]ZQa)";
-		for(int j = 0; j < strlen(tm); j++)tm[j] = tm[j] - 8;
-		drawText(tm, font, Renderer, 10, 250);
-	}
 #endif
 
 	viewport.Present();
