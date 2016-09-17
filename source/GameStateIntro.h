@@ -5,39 +5,47 @@
 
 #include "GameStateManager.h"
 #include "GameStateMain.h"
-#include "Sprite.h"
+#include "SpriteRenderer.h"
 
 #include "Utility.h"
 #include "Keys.h"
+#include "Shader.h"
 
 class GameStateIntro : public GameState
 {
 private:
-  Sprite background;
-  SDL_Renderer* renderer;
+  Shader& shader;
+  Texture2D background;
+  Sprite backgroundSprite;
+  Camera camera;
+  SpriteRenderer renderer;
 
 public:
-  GameStateIntro(std::stack<GameState*> *states, SDL_Renderer* renderer)
-                :background(renderer, getResourcePath("background.png"))
+  GameStateIntro(std::stack<GameState*> *states, Shader& shader)
+                :shader(shader),
+                background(getResourcePath("background.png")),
+                backgroundSprite(background, 0, 0, background.width, background.height),
+                camera(shader), 
+                renderer(shader)
   {
-    this->renderer = renderer;
     this->states = states;
   }
   ~GameStateIntro()
   {
 
   }
-  virtual void Draw(Viewport* viewport, const float extrapolate)
+  void Draw(const float extrapolate)
   {
-    background.draw(viewport, 0, 0, 0);
+    renderer.draw(backgroundSprite, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f);
   }
-  virtual void Update(const float dt, InputHandler* inputHandler, Viewport* viewport)
+  void Update(const float dt, InputHandler* inputHandler)
   {
+    camera.Update(dt, inputHandler);
     if(inputHandler->isKeyHeldDown(KEY_SPACE)) {
-      pushState(states, new GameStateMain(states, renderer));
+      pushState(states, new GameStateMain(states, shader));
     }
   }
-  virtual void FixedUpdate(const float dt, InputHandler* inputHandler)
+  void FixedUpdate(const float dt, InputHandler* inputHandler)
   {
 
   }

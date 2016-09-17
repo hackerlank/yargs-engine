@@ -22,6 +22,10 @@ struct Vector2f
   void scale(float amount);
   void normalize();
 
+  void LerpTo(Vector2f to, float t);
+
+  static Vector2f Lerp(Vector2f from, Vector2f to, float amount);
+
 };
 
 

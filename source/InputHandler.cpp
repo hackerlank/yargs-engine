@@ -6,15 +6,17 @@ InputHandler::InputHandler()
   //NOTE: pointer to internal SDL array, valid for whole lifetime, do not free
   keystate = SDL_GetKeyboardState(0);
   for(int i = 0; i < 83; i++) {
-    commands[i] = new Command();
+    //commands[i] = new Command();
   }
 }
 InputHandler::~InputHandler()
 {
+  /*
   //TODO: Might not need if lifetime = whole program, check on later
   for(int i = 0; i < 83; i++) {
     delete commands[i];
   }
+  */
 }
 void InputHandler::updateInput()
 {
@@ -48,10 +50,12 @@ void InputHandler::ExecuteCommands()
 
 void InputHandler::bindCommandToKey(int Key, Command* command)
 {
+  /*
   if(commands[Key]) {
     free(commands[Key]);
   }
   commands[Key] = command;
+  */
 }
 
 bool InputHandler::isKeyHeldDown(int Key)

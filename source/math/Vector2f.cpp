@@ -74,3 +74,29 @@ void Vector2f::normalize()
     this->y = this->y/length;
   }
 }
+
+float max(float first, float second)
+{
+  if(first > second) return first;
+  return second;
+}
+float min(float first, float second)
+{
+  if(first < second) return first;
+  return second;
+}
+
+void Vector2f::LerpTo(Vector2f to, float amount)
+{
+
+}
+
+Vector2f Vector2f::Lerp(Vector2f from, Vector2f to, float t)
+{
+  t = max(0.0f, min(t, 1.0f)); //clamp amount between 0 and 1
+  //t = t*t*t * (t * (6.0f*t - 15.0f) + 10.0f);
+  float x = from.x*(1-t) + to.x*t;  //interpolate x
+  float y = from.y*(1-t) + to.y*t;  //interpolate y
+
+  return Vector2f(x, y);
+}

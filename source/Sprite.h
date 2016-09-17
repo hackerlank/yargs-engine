@@ -1,43 +1,49 @@
 #ifndef __SPRITE_H__
 #define __SPRITE_H__
 
-#include <SDL2/SDL.h>
-
-#ifdef EMSCRIPTEN
-#include <SDL_image.h>
-#else
-#include <SDL2_image/SDL_image.h>
-#endif
-
-#include "Viewport.h"
-#include <string>
+#include "Texture2D.h"
 
 class Sprite
 {
-  SDL_Texture* Texture;
-  int TextureWidth;
-  int TextureHeight;
-  SDL_Rect ClippedRect;
-  SDL_Rect DestRect;
+private:
+  Texture2D& texture;
+  int x, y, width, height;
 
 public:
-  Sprite();
-  Sprite(SDL_Renderer* renderer, std::string FileNamePath);
-  Sprite(SDL_Renderer* renderer, std::string FileNamePath,
-         int ClipX, int ClipY, int ClipWidth, int ClipHeight);
-  ~Sprite();
+  Sprite(Texture2D& tex)
+        :texture(tex)
+  {
+      this->texture = tex;
+      this->x = 0;
+      this->y = 0;
+      this->width = tex.width;
+      this->height = tex.height;
+  }
+  Sprite(Texture2D& tex, int x, int y, int w, int h)
+        :texture(tex)
+  {
+      this->x = x;
+      this->y = y;
+      this->width = w;
+      this->height = h;
+  }
 
-  void draw(Viewport* viewport, int x, int y, double angle);
-  void loadTexture(SDL_Renderer* renderer, std::string FileNamePath);
 
-  void operator=(const Sprite& other);
 
-  int getTextureWidth();
-  int getTextureHeight();
-  int getWidth();
-  int getHeight();
-  int getX();
-  int getY();
+  int getWidth()
+  {
+    return this->texture.width;
+  }
+  int getHeight()
+  {
+    return this->texture.height;
+  }
+
+  Texture2D& getTexture()
+  {
+    return this->texture;
+  }
+  
 };
 
 #endif

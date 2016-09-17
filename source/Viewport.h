@@ -35,13 +35,15 @@ public:
     void RenderToViewport(SDL_Texture* Texture, const SDL_Rect* srcRect,
                           SDL_Rect dstRect, const double angle,
                           const SDL_Point* center, const SDL_RendererFlip flip,
-                          int xLocation, int yLocation);
+                          float xLocation, float yLocation);
     void PanLeft(float dt, float amount);
     void PanRight(float dt, float amount);
     void PanUp(float dt, float amount);
     void PanDown(float dt, float amount);
     void ZoomIn(float dt, float amount);
     void panBy(float dx, float dy);
+
+    void followTarget(Vector2f target, float dt);
 
     int getWidth();
     int getHeight();
@@ -55,8 +57,8 @@ public:
       SDL_SetRenderDrawColor(Renderer, 255,0,0,255);
       SDL_RenderDrawLine(Renderer, (int)x1 - (int)ScreenX,
                          (int)y1 - (int)ScreenY,
-                         (int)x1 - (int)ScreenX +(int)x2,
-                         (int)y1 - (int)ScreenY +(int)y2);
+                         (int)x2 - (int)ScreenX,
+                         (int)y2 - (int)ScreenY);
       SDL_Rect r = { (int)x1 - (int)ScreenX +(int)x2 - 5,
                      (int)y1 - (int)ScreenY +(int)y2 - 5, 10, 10 };
       SDL_RenderFillRect(Renderer, &r);

@@ -12,8 +12,8 @@ class GameState
 public:
   std::stack<GameState*> *states;
 
-  virtual void Draw(Viewport* viewport, const float extrapolate) = 0;
-  virtual void Update(const float dt, InputHandler* inputHandler, Viewport* viewport) = 0;
+  virtual void Draw(const float extrapolate) = 0;
+  virtual void Update(const float dt, InputHandler* inputHandler) = 0;
   virtual void FixedUpdate(const float dt, InputHandler* inputHandler) = 0;
   virtual ~GameState() = 0;
 };

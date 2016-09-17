@@ -15,11 +15,17 @@
 #include "Utility.h"
 #include <string>
 
+
 GameStateMain::GameStateMain(std::stack<GameState*> *states,
-                             SDL_Renderer* Renderer)
-                            :grass(Renderer, getResourcePath("dirt.png")),
-                            player1(Renderer, getResourcePath("blackline.png")),
-                            player2(Renderer, getResourcePath("alienGreen.png"))
+                             Shader& shader)
+                            :grass(getResourcePath("dirt.png")),
+                            grassSprite(grass),
+                            playerTex(getResourcePath("alienGreen.png")),
+                            playerSprite(playerTex),
+                            //player1("blackline.png", shader),
+                            player2(playerSprite, renderer),
+                            camera(shader),
+                            renderer(shader)
 {
   this->states = states;
   std::string resourcePath;
@@ -28,51 +34,51 @@ GameStateMain::GameStateMain(std::stack<GameState*> *states,
   player2.bindKeys(KEY_A, KEY_W, KEY_D, KEY_S, KEY_Q, KEY_E);
 
   gameObjects.push_back(&player2);
-  gameObjects.push_back(&player1);
+  //gameObjects.push_back(&player1);
 }
 GameStateMain::~GameStateMain()
 {
 
 }
 
-void GameStateMain::Draw(Viewport* viewport, const float extrapolate)
+void GameStateMain::Draw(const float extrapolate)
 {
 
-	for(int i = 0; i <= SCREEN_WIDTH/grass.getTextureWidth(); i++) {
-		for(int j = 0; j <= SCREEN_HEIGHT/grass.getTextureHeight(); j++) {
-			grass.draw(viewport, i*(grass.getWidth()), j*grass.getHeight(), 0);
+	for(int i = 0; i <= 10; i++) {
+		for(int j = 0; j <= 10; j++) {
+			renderer.draw(grassSprite, i*(grassSprite.getWidth()), j*(grassSprite.getHeight()), 0, 1.0, 1.0);
 		}
 	}
 
   //TODO: This spot is temporary, need to move to Update()
-  player2.panToIncludeInViewport(viewport, TRACKED_CHARACTER_PADDING, extrapolate);
+  //player2.panToIncludeInViewport(viewport, TRACKED_CHARACTER_PADDING, extrapolate);
 
   for(int object = 0; object < gameObjects.size(); object++) {
-		gameObjects[object]->Draw(viewport, extrapolate);
+		gameObjects[object]->Draw(extrapolate);
 	}
 
 }
 
-void GameStateMain::Update(const float dt, InputHandler* inputHandler, Viewport* viewport)
+void GameStateMain::Update(const float dt, InputHandler* inputHandler)
 {
   if(inputHandler->isKeyHeldDown(KEY_LEFT)) {
-    viewport->PanLeft(dt, 600.0f);
+    //viewport->PanLeft(dt, 600.0f);
   }
   if(inputHandler->isKeyHeldDown(KEY_RIGHT)) {
-    viewport->PanRight(dt, 600.0f);
+    //viewport->PanRight(dt, 600.0f);
   }
   if(inputHandler->isKeyHeldDown(KEY_UP)) {
-    viewport->PanUp(dt, 600.0f);
+    //viewport->PanUp(dt, 600.0f);
   }
   if(inputHandler->isKeyHeldDown(KEY_DOWN)) {
-    viewport->PanDown(dt, 600.0f);
+    //viewport->PanDown(dt, 600.0f);
   }
 
   if(inputHandler->isKeyHeldDown(KEY_I)) {
-    viewport->ZoomIn(dt, .2f);
+    //viewport->ZoomIn(dt, .2f);
   }
   if(inputHandler->isKeyHeldDown(KEY_O)) {
-    viewport->ZoomIn(dt, -.2f);
+    //viewport->ZoomIn(dt, -.2f);
   }
 
   if(inputHandler->isKeyHeldDown(KEY_Y)) {
@@ -84,7 +90,8 @@ void GameStateMain::Update(const float dt, InputHandler* inputHandler, Viewport*
     gameObjects[object]->Update(dt, inputHandler);
   }
 
-
+  camera.Update(dt, inputHandler);
+  //viewport->followTarget(player2.getCenterPosition(), dt);
 }
 
 void GameStateMain::FixedUpdate(const float dt, InputHandler* inputHandler)

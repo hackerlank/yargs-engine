@@ -15,8 +15,7 @@ struct FPS_Counter{
   bool ShowFPS_Counter;
 };
 
-void DrawFPS_Counter(FPS_Counter* fps_counter,
-                     TTF_Font* font, SDL_Renderer* renderer)
+void DrawFPS_Counter(FPS_Counter* fps_counter, TTF_Font* font)
 {
   if(fps_counter->DisplayedFrames > fps_counter->FramesToAverage) {
     fps_counter->AverageFPS = fps_counter->DisplayedFrames/
@@ -26,7 +25,8 @@ void DrawFPS_Counter(FPS_Counter* fps_counter,
   }
   char fpsString[200];
   sprintf(fpsString, "FPS: %.0f", fps_counter->AverageFPS);
-  drawText(fpsString, font, renderer, 10, 10);
+  //drawText(fpsString, font, renderer, 10, 10);
+  debug("%s", fpsString);
   fps_counter->DisplayedFrames++;
   fps_counter->TimeSinceLastAverage += fps_counter->timer->TimeElapsed;
 }

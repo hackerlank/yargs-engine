@@ -7,21 +7,29 @@
 #include "GameState.h"
 #include "GameObject.h"
 #include "PlayerCharacter.h"
-#include "Sprite.h"
+#include "SpriteRenderer.h"
+#include "Shader.h"
+#include "Camera.h"
 
 class GameStateMain : public GameState
 {
 private:
   std::vector<GameObject*> gameObjects;
-  PlayerCharacter player1;
+  Texture2D grass;
+  Sprite grassSprite;
+
+  Texture2D playerTex;
+  Sprite playerSprite;
+  //PlayerCharacter player1;
+  Camera camera;
+  SpriteRenderer renderer;
   PlayerCharacter player2;
-  Sprite grass;
 
 public:
-  GameStateMain(std::stack<GameState*> *states, SDL_Renderer* Renderer);
+  GameStateMain(std::stack<GameState*> *states, Shader& shader);
   ~GameStateMain();
-  virtual void Draw(Viewport* viewport, const float extrapolate);
-  virtual void Update(const float dt, InputHandler* inputHandler, Viewport* viewport);
+  virtual void Draw(const float extrapolate);
+  virtual void Update(const float dt, InputHandler* inputHandler);
   virtual void FixedUpdate(const float dt, InputHandler* inputHandler);
 
 };
